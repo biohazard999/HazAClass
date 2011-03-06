@@ -48,7 +48,7 @@ class Type extends Object
 	{
 		return $this->instance instanceof $interface;
 	}
-	
+
 	/**
 	 * @param Type $type
 	 * @return bool
@@ -58,7 +58,7 @@ class Type extends Object
 		$name = $type->GetFullName();
 		return $this->instance instanceof $name;
 	}
-	
+
 	/**
 	 * @param string $classname
 	 * @return bool
@@ -67,7 +67,7 @@ class Type extends Object
 	{
 		return $this->instance instanceof $classname;
 	}
-	
+
 	/**
 	 * @return ReflectionClass
 	 */
@@ -84,6 +84,77 @@ class Type extends Object
 		return new ReflectionObject($this->instance);
 	}
 
+	/**
+	 * Returns a setter-method-name from a propertyname
+	 * @param string $propertyName
+	 * @return string
+	 */
+	public function SetterOf($propertyName)
+	{
+		return self::buildCamelCaseMethod('set', $propertyName);
+	}
+
+	/**
+	 * Returns a getter-method-name from a propertyname
+	 *
+	 * @param string $propertyName
+	 * @return string
+	 */
+	public function GetterOf($propertyName)
+	{
+		return self::buildCamelCaseMethod('get', $propertyName);
+	}
+
+	/**
+	 * Creates a camel case method (first param is lowercased at first char, second will uppercase first char)
+	 * @param string $firstPart
+	 * @param string $secondPart
+	 * @return string
+	 */
+	private static function buildCamelCaseMethod($firstPart, $secondPart)
+	{
+		return String::CamelCase($firstPartm, $secondPart)->ToString();
+	}
+
+	public function StaticMethod($methodname)
+	{
+		return $this->GetFullName().'::'.$methodname;
+	}
+
+	public function Method($methodname)
+	{
+		return $this->GetFullName().'->'.$methodname;
+	}
+
+	public function Constant($classname, $constantname)
+	{
+		return $this->GetFullName().'::'.$constantname;
+	}
+
+	public function IsInNamespace($classname)
+	{
+		return $this->GetReflectionClass()->inNamespace();
+	}
+
+	public function GetNamespaceName()
+	{
+		return $this->GetReflectionClass()->getNamespaceName();
+	}
+
+	public function GetShortName()
+	{
+		return $this->GetReflectionClass()->getShortName();
+	}
+
+	public function GetDirectory()
+	{
+		return dirname($this->getFileName());
+	}
+
+	public function GetFileName()
+	{
+		return $this->GetReflectionClass()->getFileName();
+	}
 }
 
 ?>
