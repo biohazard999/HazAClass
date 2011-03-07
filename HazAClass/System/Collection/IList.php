@@ -91,6 +91,10 @@ interface IList extends \ArrayAccess, \Countable, \Iterator, IArrayCastAble
 	 * @return void
 	 */
 	public function AddRange($mixed);
+	
+	public function IndexExists($index);
+	
+	public function ElementExists($element);
 }
 
 ?>

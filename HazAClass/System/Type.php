@@ -105,12 +105,6 @@ class Type extends Object
 		return self::buildCamelCaseMethod('get', $propertyName);
 	}
 
-	/**
-	 * Creates a camel case method (first param is lowercased at first char, second will uppercase first char)
-	 * @param string $firstPart
-	 * @param string $secondPart
-	 * @return string
-	 */
 	private static function buildCamelCaseMethod($firstPart, $secondPart)
 	{
 		return String::CamelCase($firstPartm, $secondPart)->ToString();
