@@ -23,13 +23,13 @@ class Type extends Object
 
 	public static $classname = __CLASS__;
 	/**
-	 * @var IObject
+	 * @var string
 	 */
-	private $instance;
+	private $type;
 
-	public function __construct(IObject $object)
+	public function __construct($objectType)
 	{
-		$this->instance = $object;
+		$this->type = $objectType;
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Type extends Object
 	 */
 	public function GetFullName()
 	{
-		return $this->instance->GetClassName();
+		return $this->type;
 	}
 
 	/**
@@ -74,14 +74,6 @@ class Type extends Object
 	public function GetReflectionClass()
 	{
 		return new ReflectionClass($this->GetFullName());
-	}
-
-	/**
-	 * @return ReflectionObject
-	 */
-	public function GetReflectionObject()
-	{
-		return new ReflectionObject($this->instance);
 	}
 
 	/**

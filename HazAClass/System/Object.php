@@ -34,7 +34,7 @@ class Object implements IObject
 
 	public function ToString()
 	{
-		return static::$classname;
+		return $this->GetClassName().' ('.$this->GetHash().')';
 	}
 
 	final public function __toString()
@@ -45,7 +45,7 @@ class Object implements IObject
 	public function GetType()
 	{
 		if($this->type === null)
-			$this->type = new Type($this);
+			$this->type = new Type($this->GetClassName());
 		return $this->type;
 	}
 
