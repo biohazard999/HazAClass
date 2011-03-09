@@ -18,6 +18,8 @@
 
 namespace HazAClass\System\Collection;
 
+use HazAClass\System\IArrayCastAble;
+
 interface IList extends \ArrayAccess, \Countable, \Iterator, IArrayCastAble
 {
 	const IList = __CLASS__;

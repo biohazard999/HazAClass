@@ -18,7 +18,6 @@
 
 namespace HazAClass\System\Collection;
 
-use HazAClass\System\IArrayCastAble;
 use HazAClass\System\Object;
 
 class ArrayList extends Object implements IList

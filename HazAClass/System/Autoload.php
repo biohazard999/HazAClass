@@ -22,6 +22,9 @@ use HazAClass\utils\StringUtil;
 use HazAClass\core\checks\Natives;
 use HazAClass\core\collections\NativeCollection;
 
+include_once 'Object.php';
+include_once 'String.php';
+
 class Autoload extends Object
 {
 
@@ -55,8 +58,10 @@ class Autoload extends Object
 
 	public function Load($classname)
 	{
-
 		$path = $this->BuildPath($classname);
+		echo "Try to load:  $classname \n";
+		echo "Loading path: $path \n";
+		echo "Exists? ".var_export(file_exists($path),true)."\n";
 		if(file_exists($path))
 		{
 			include($path);
@@ -105,4 +110,7 @@ class Autoload extends Object
 		return $classes;
 	}
 }
+
+new Autoload('HazAClass', dirname(__DIR__));
+
 ?>

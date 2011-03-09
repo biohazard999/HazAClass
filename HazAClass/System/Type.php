@@ -26,6 +26,10 @@ class Type extends Object
 	 * @var string
 	 */
 	private $type;
+	/**
+	 * @var ReflectionClass
+	 */
+	private $reflectionClass;
 
 	public function __construct($objectType)
 	{
@@ -63,7 +67,7 @@ class Type extends Object
 	 * @param string $classname
 	 * @return bool
 	 */
-	public function IsClass($classname)
+	public function IsSubClass($classname)
 	{
 		return $this->instance instanceof $classname;
 	}
@@ -73,7 +77,18 @@ class Type extends Object
 	 */
 	public function GetReflectionClass()
 	{
-		return new ReflectionClass($this->GetFullName());
+		if($this->reflectionClass === null)
+			$this->reflectionClass = new ReflectionClass($this->GetFullName());
+		return $this->reflectionClass;
+	}
+
+	/**
+	 * @param IObject $obj
+	 * @return ReflectionObject 
+	 */
+	public function GetReflectionObject(IObject $obj)
+	{
+		return new ReflectionObject($obj);
 	}
 
 	/**
@@ -141,6 +156,7 @@ class Type extends Object
 	{
 		return $this->GetReflectionClass()->getFileName();
 	}
+
 }
 
 ?>

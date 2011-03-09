@@ -18,7 +18,9 @@
 
 namespace HazAClass\System;
 
-class Object implements IObject
+include_once 'IObject.php';
+
+abstract class Object implements IObject
 {
 
 	public static $classname = __CLASS__;
@@ -39,7 +41,14 @@ class Object implements IObject
 
 	final public function __toString()
 	{
-		return $this->ToString();
+		try
+		{
+			return $this->ToString();
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
 	}
 
 	public function GetType()
