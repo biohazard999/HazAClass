@@ -18,7 +18,7 @@
 
 namespace HazAClass\System;
 
-class String extends Object
+class String extends Object implements \Countable
 {
 
 	public static $classname = __CLASS__;
@@ -61,7 +61,7 @@ class String extends Object
 	public function SubString($start = 0, $len = null)
 	{
 		if($len === null)
-			$this->string = substr($this->str, $start);
+			$this->string = substr($this->string, $start);
 		else
 			$this->string = substr($this->string, $start, $len);
 		return $this;
@@ -72,10 +72,16 @@ class String extends Object
 		return strlen($this->string);
 	}
 
+	public function count()
+	{
+		return $this->Length();
+	}
+
 	public function InString($search)
 	{
 		if($search === '')
 			throw new InvalidArgumentException('Search string must not be an empty string');
+
 		return $this->Position($search) !== null;
 	}
 
@@ -85,15 +91,19 @@ class String extends Object
 		{
 			$bool = false;
 			foreach($search as $char)
-				$bool &= $this->InString($char);
-			return $bool;
+			{
+				$bool |= $this->InString($char);
+			}
+			return (bool) $bool;
 		}
 		return $this->InString($search);
 	}
 
 	public function StartsWith($search)
 	{
-		return $this->SubString(0, self::Instance($search)->Length()) == $search;
+		$clone = clone $this;
+
+		return $clone->SubString(0, self::Instance($search)->Length()) == $search;
 	}
 
 	public function EndsWith($search)
@@ -103,17 +113,17 @@ class String extends Object
 		return $str->SubString(String::Instance($search)->Length($search) * -1)->ToString() == $search;
 	}
 
-	public function Remove($string, $remove, $count = null)
+	public function Remove($remove, $count = null)
 	{
-		if($string === $remove)
+		if($this->string === $remove)
 			return '';
-		return self::replace($string, $remove, '', $count);
+		return $this->Replace($remove, '', $count);
 	}
 
 	public function RemoveEnd($remove)
 	{
 		if($this->EndsWith($remove))
-			return $this->SubString(0, String::Instance($remove) * -1);
+			return $this->SubString(0, String::Instance($remove)->Length() * -1);
 
 		return $this;
 	}
@@ -180,7 +190,7 @@ class String extends Object
 		$this->string = rtrim($this->string);
 		return $this;
 	}
-	
+
 	public function LowerCase()
 	{
 		$this->string = strtolower($this->string);
@@ -204,7 +214,7 @@ class String extends Object
 		$this->string = lcfirst($this->string);
 		return $this;
 	}
-	
+
 	/**
 	 * @params string $param1, string $param2, string $param3, string ...
 	 * @return String 
@@ -215,9 +225,10 @@ class String extends Object
 		$str = new String();
 		foreach($args as $arg)
 			$str->Concat(String::Instance($arg)->UpperCaseFirst());
-		
+
 		return $str;
 	}
+
 }
 
 ?>
