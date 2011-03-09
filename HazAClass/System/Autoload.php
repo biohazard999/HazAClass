@@ -24,6 +24,7 @@ use HazAClass\core\collections\NativeCollection;
 
 include_once 'Object.php';
 include_once 'String.php';
+include_once 'Functions.php';
 
 class Autoload extends Object
 {

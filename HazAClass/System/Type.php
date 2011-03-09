@@ -50,7 +50,7 @@ final class Type extends Object
 	 */
 	public function ImplementsInterface($interfaceName)
 	{
-		return $this->instance instanceof $interface;
+		return $this->GetReflectionClass()->implementsInterface($interfaceName);
 	}
 
 	/**
@@ -59,8 +59,9 @@ final class Type extends Object
 	 */
 	public function IsTypeOf(Type $type)
 	{
-		$name = $type->GetFullName();
-		return $this->instance instanceof $name;
+		if($type === $this)
+			return true;
+		return $this->IsSubClass($type->GetFullName());
 	}
 
 	/**
@@ -69,7 +70,7 @@ final class Type extends Object
 	 */
 	public function IsSubClass($classname)
 	{
-		return $this->instance instanceof $classname;
+		return $this->GetReflectionClass()->isSubclassOf($classname);
 	}
 
 	/**
@@ -78,7 +79,7 @@ final class Type extends Object
 	public function GetReflectionClass()
 	{
 		if($this->reflectionClass === null)
-			$this->reflectionClass = new ReflectionClass($this->GetFullName());
+			$this->reflectionClass = new \ReflectionClass($this->GetFullName());
 		return $this->reflectionClass;
 	}
 
@@ -88,7 +89,7 @@ final class Type extends Object
 	 */
 	public function GetReflectionObject(IObject $obj)
 	{
-		return new ReflectionObject($obj);
+		return new \ReflectionObject($obj);
 	}
 
 	/**
@@ -114,7 +115,7 @@ final class Type extends Object
 
 	private static function buildCamelCaseMethod($firstPart, $secondPart)
 	{
-		return String::CamelCase($firstPartm, $secondPart)->ToString();
+		return String::CamelCase($firstPart, $secondPart)->ToString();
 	}
 
 	public function StaticMethod($methodname)
@@ -127,19 +128,19 @@ final class Type extends Object
 		return $this->GetFullName().'->'.$methodname;
 	}
 
-	public function Constant($classname, $constantname)
+	public function Constant($constantname)
 	{
 		return $this->GetFullName().'::'.$constantname;
 	}
 
-	public function IsInNamespace($classname)
+	public function IsInNamespace()
 	{
 		return $this->GetReflectionClass()->inNamespace();
 	}
 
 	public function GetNamespaceName()
 	{
-		return $this->GetReflectionClass()->getNamespaceName();
+		return '\\'.$this->GetReflectionClass()->getNamespaceName();
 	}
 
 	public function GetShortName()
