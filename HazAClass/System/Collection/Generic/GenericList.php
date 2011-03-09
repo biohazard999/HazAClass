@@ -34,21 +34,21 @@ class GenericList extends Object implements IList
 
 	public function __construct($type)
 	{
-		$this->typeofElements = $type;
+		$this->typeofElements = typeof($type);
 		$this->innerList = new ArrayList();
 	}
-	
+
 	public function IsElementMatching($element)
 	{
-		return $element instanceof $this->typeofElements;
+		return typeof(get_class($element))->IsTypeOf($this->typeofElements);
 	}
 
 	private function GuardElementIsTypeOfGeneric($element)
 	{
 		if(!$this->IsElementMatching($element))
-			throw new InvalidArgumentException('Given Element is not matching the generic Type');
+			throw new \InvalidArgumentException('Given Element is not matching the generic Type');
 	}
-	
+
 	public function AddArray(array $array)
 	{
 		foreach($array as $value)
