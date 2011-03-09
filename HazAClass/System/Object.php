@@ -24,10 +24,6 @@ abstract class Object implements IObject
 {
 
 	public static $classname = __CLASS__;
-	/**
-	 * @var Type
-	 */
-	private $type;
 
 	public function GetHash()
 	{
@@ -51,14 +47,12 @@ abstract class Object implements IObject
 		}
 	}
 
-	public function GetType()
+	final public function GetType()
 	{
-		if($this->type === null)
-			$this->type = new Type($this->GetClassName());
-		return $this->type;
+		return TypeManager::Instance()->getType($this->GetClassName());
 	}
 
-	public function GetClassName()
+	final public function GetClassName()
 	{
 		return get_class($this);
 	}

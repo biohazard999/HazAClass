@@ -18,7 +18,7 @@
 
 namespace HazAClass\System;
 
-class Type extends Object
+final class Type extends Object
 {
 
 	public static $classname = __CLASS__;
