@@ -74,7 +74,7 @@ class GenericList extends Object implements IList
 		elseif($mixed instanceof \Iterator)
 			$this->AddIterator($mixed);
 		else
-			throw new InvalidArgumentException('Param1 must be an array or a instance of \\Iterator');
+			throw new \InvalidArgumentException('Param1 must be an array or a instance of \\Iterator');
 	}
 
 	public function ElementExists($element)
