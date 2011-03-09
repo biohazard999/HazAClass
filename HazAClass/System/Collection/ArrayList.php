@@ -48,6 +48,8 @@ class ArrayList extends Object implements IList
 
 	public function offsetSet($offset, $value)
 	{
+		if($offset === null)
+			return $this->innerArray[] = $value;
 		return $this->innerArray[$offset] = $value;
 	}
 

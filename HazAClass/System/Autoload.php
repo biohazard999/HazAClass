@@ -21,6 +21,7 @@ namespace HazAClass\System;
 use HazAClass\utils\StringUtil;
 use HazAClass\core\checks\Natives;
 use HazAClass\core\collections\NativeCollection;
+use HazAClass\System\Collection\ArrayList;
 
 include_once 'Object.php';
 include_once 'String.php';
@@ -44,7 +45,7 @@ class Autoload extends Object
 		$this->extension = $ext;
 		$this->frameworkPath = $basedir.\DIRECTORY_SEPARATOR;
 
-		self::RegisterAutoloader($this);
+		self::RegisterAutoloader($this, 'Load');
 	}
 
 	public function GetMainNameSpace()
@@ -60,9 +61,7 @@ class Autoload extends Object
 	public function Load($classname)
 	{
 		$path = $this->BuildPath($classname);
-		echo "Try to load:  $classname \n";
-		echo "Loading path: $path \n";
-		echo "Exists? ".var_export(file_exists($path),true)."\n";
+		
 		if(file_exists($path))
 		{
 			include($path);
@@ -79,14 +78,24 @@ class Autoload extends Object
 			->Replace('\\', DIRECTORY_SEPARATOR);
 	}
 
-	public static function RegisterAutoloader($classObj, $method = 'load')
+	public static function RegisterAutoloader($classObj, $method = 'Load')
 	{
 		self::Register(array($classObj, $method));
+	}
+
+	public static function UnRegisterAutoloader($classObj, $method = 'Load')
+	{
+		self::UnRegister(array($classObj, $method));
 	}
 
 	private static function Register($method)
 	{
 		spl_autoload_register($method);
+	}
+
+	private static function UnRegister($method)
+	{
+	 spl_autoload_unregister($method);
 	}
 
 	public function GetFrameworkPath()
