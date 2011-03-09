@@ -132,7 +132,7 @@ class ArrayList extends Object implements IList
 
 	public function GetLastElement()
 	{
-		$this->end();
+		end($this->innerArray);
 		$last = $this->current();
 		if($last === false)
 			return null;
@@ -146,12 +146,14 @@ class ArrayList extends Object implements IList
 
 	public function IndexOf($element)
 	{
-		return array_search($element, $this->innerArray, true);
+		$result = array_search($element, $this->innerArray, true);
+
+		return $result === false ? null : $result;
 	}
 
 	public function InsertElement($index, $element)
 	{
-		$this[$index] = $element;
+		$this->offsetSet($index, $element);
 	}
 
 	public function Remove($element)
@@ -172,7 +174,7 @@ class ArrayList extends Object implements IList
 
 	public function ElementExists($element)
 	{
-		return in_array($item, $this->innerArray, true);
+		return in_array($element, $this->innerArray, true);
 	}
 
 }
