@@ -158,7 +158,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 		$this->object->Concat('abcdefg');
 
 		$this->assertEquals(5, $this->object->ReversePosition('f'));
-		$this->assertEquals(null, $this->object->ReversePosition('z'));
+		$this->assertNull($this->object->ReversePosition('z'));
 	}
 
 	public function testRepeat()

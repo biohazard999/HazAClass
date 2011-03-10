@@ -331,7 +331,7 @@ abstract class AbstractListTest extends \PHPUnit_Framework_TestCase
 		$this->getList()->InsertElement(1, $b);
 		$this->getList()->Remove($b);
 
-		$this->assertEquals(null, $this->getList()->IndexOf($b));
+		$this->assertNull($this->getList()->IndexOf($b));
 	}
 
 	/**
@@ -342,7 +342,7 @@ abstract class AbstractListTest extends \PHPUnit_Framework_TestCase
 		$this->getList()->InsertElement($indexA, $b);
 		$this->getList()->RemoveAt($indexA);
 
-		$this->assertEquals(null, $this->getList()->IndexOf($b));
+		$this->assertNull($this->getList()->IndexOf($b));
 	}
 
 	/**
