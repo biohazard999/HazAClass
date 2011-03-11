@@ -15,12 +15,11 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 * @var ObjectImpl
 	 */
 	protected $object1;
-
 	/**
 	 * @var ObjectImpl
 	 */
 	protected $object2;
-	
+
 	protected function setUp()
 	{
 		$this->object1 = new ObjectImpl();
@@ -51,9 +50,9 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals($this->buildName($this->object1), (string) $this->object1);
 		$this->assertEquals($this->buildName($this->object2), (string) $this->object2);
-		$this->assertNotEquals((string) $this->object1,(string) $this->object2);
+		$this->assertNotEquals((string) $this->object1, (string) $this->object2);
 	}
-	
+
 	private function buildName(Object $obj)
 	{
 		return get_class($obj).' ('.spl_object_hash($obj).')';
@@ -71,6 +70,27 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(get_class($this->object1), $this->object1->GetClassName());
 		$this->assertEquals(get_class($this->object2), $this->object2->GetClassName());
 		$this->assertEquals($this->object1->GetClassName(), $this->object2->GetClassName());
+	}
+
+	public function testReferencesShouldBeEqualStatic()
+	{
+		$a = new ObjectImpl();
+		$this->assertTrue(Object::ReferenceEqualsStatic($a, $a));
+	}
+
+	public function testReferencesShouldNotBeEqualStatic()
+	{
+		$this->assertFalse(Object::ReferenceEqualsStatic( new ObjectImpl(), new ObjectImpl()));
+	}
+
+	public function testReferencesShouldBeEqual()
+	{
+		$this->assertTrue($this->object1->ReferenceEquals($this->object1));
+	}
+
+	public function testReferencesShouldNotBeEqual()
+	{
+		$this->assertFalse($this->object1->ReferenceEquals($this->object2));
 	}
 
 }

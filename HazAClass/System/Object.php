@@ -57,6 +57,15 @@ abstract class Object implements IObject
 		return get_class($this);
 	}
 
+	final public static function ReferenceEqualsStatic(IObject $objectA, IObject $objectB)
+	{
+		return $objectA === $objectB;
+	}
+
+	public function ReferenceEquals(IObject $obj)
+	{
+		return $this === $obj;
+	}
 }
 
 ?>

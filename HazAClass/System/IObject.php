@@ -39,7 +39,9 @@ interface IObject extends IStringCastAble
 	 * @return string Returns the classname of the object
 	 */
 	public function GetClassName();
-	
+
+	public function ReferenceEquals(IObject $obj);
+
 }
 
 ?>
