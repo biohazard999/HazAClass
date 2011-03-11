@@ -36,7 +36,7 @@ abstract class Enum extends Object
 	 * @param string $methodHash
 	 * @return Enum
 	 */
-	protected static function getInstance($value)
+	protected static function GetInstance($value)
 	{
 		$methodHash = hash('md5', $value);
 		if(!array_key_exists(static::$classname, self::$instances))
@@ -48,7 +48,7 @@ abstract class Enum extends Object
 		return self::$instances[static::$classname][$methodHash];
 	}
 
-	public function getValue()
+	public function GetValue()
 	{
 		return $this->value;
 	}

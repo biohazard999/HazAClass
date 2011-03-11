@@ -73,7 +73,7 @@ class ReflectionProperty extends \ReflectionProperty
 			try
 			{
 				CacheHelper::checkFileChange($fileCache, $this->getDeclaringClass()->getFileName());
-				return $attributesCache->getValue($name);
+				return $attributesCache->GetValue($name);
 			}
 			catch(CacheInvalidatedException $e)
 			{

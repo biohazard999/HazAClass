@@ -143,7 +143,7 @@ class AttributeInterpreterValueHolder
 		$array = array();
 		foreach($this->params as $param)
 			if($param->isNamed())
-				$array[$param->getName()] = $param->getValue();
+				$array[$param->getName()] = $param->GetValue();
 
 		return $array;
 	}
@@ -203,7 +203,7 @@ class AttributeInterpreterValueHolder
 			$staticPropertyClassName = $this->findComplexParamsFullName($param, $this->getReflectionClass());
 			$param->setFullQualifiedName($staticPropertyClassName);
 			$constantRef = ReflectionUtil::getReflectionClass($staticPropertyClassName);
-			return $constantRef->getProperty($param->getValue())->getValue();
+			return $constantRef->getProperty($param->getValue())->GetValue();
 		}
 	}
 

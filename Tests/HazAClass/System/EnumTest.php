@@ -27,7 +27,7 @@ class EnumTest extends \PHPUnit_Framework_TestCase
 	public function testGetValue()
 	{
 		$this->assertEquals('1', TestEnum::MyValue1()->getValue());
-		$this->assertEquals(TestEnum::MyValue3(), TestEnum::MyValue2()->getValue());
+		$this->assertEquals(TestEnum::MyValue3()->getValue(), TestEnum::MyValue2()->getValue());
 		$this->assertEquals('MyValue3', TestEnum::MyValue3()->getValue());
 
 	}
@@ -56,7 +56,7 @@ class TestEnum extends Enum
 
 	public static function MyValue2()
 	{
-		return self::getInstance(TestEnum::MyValue3());
+		return self::getInstance('MyValue3');
 	}
 
 	public static function MyValue3()

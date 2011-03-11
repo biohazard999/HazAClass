@@ -25,22 +25,22 @@ class AttributeUsage extends Enum
 
 	public static function onClass()
 	{
-		return self::getInstance(__FUNCTION__);
+		return self::GetInstance(__FUNCTION__);
 	}
 
 	public static function onMethod()
 	{
-		return self::getInstance(__FUNCTION__);
+		return self::GetInstance(__FUNCTION__);
 	}
 
 	public static function onProperty()
 	{
-		return self::getInstance(__FUNCTION__);
+		return self::GetInstance(__FUNCTION__);
 	}
 
 	public static function onAny()
 	{
-		return self::getInstance(__FUNCTION__);
+		return self::GetInstance(__FUNCTION__);
 	}
 
 }

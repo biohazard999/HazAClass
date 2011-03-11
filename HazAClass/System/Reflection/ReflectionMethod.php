@@ -58,7 +58,7 @@ class ReflectionMethod extends \ReflectionMethod
 			{
 				CacheHelper::checkFileChange($fileCache, $this->getFileName());
 
-				$v = $attributesCache->getValue($name);
+				$v = $attributesCache->GetValue($name);
 				return $v;
 			}
 			catch(CacheInvalidatedException $e)
