@@ -36,7 +36,7 @@ final class Type extends Object
 	public function __construct($objectType)
 	{
 		if(!Type::IsTypeExisting($objectType))
-			throw new InvalidArgumentException('$objectType is not existing');
+			throw new \InvalidArgumentException($objectType.' is not existing');
 		$this->type = $objectType;
 	}
 

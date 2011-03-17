@@ -98,7 +98,6 @@ class AttributeBuilder
 			}
 			catch(AttributeException $e)
 			{
-				Debug::log($e->getMessage(), __METHOD__);
 				continue; //@todo überprüfen ob das sinnvoll ist
 			}
 
