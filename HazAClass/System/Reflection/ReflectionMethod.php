@@ -17,7 +17,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/reflection/ReflectionMethod.#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\core\reflection;
+namespace HazAClass\System\Reflection;
 
 use HazAClass\core\cache\CacheHelper;
 use HazAClass\core\cache\CacheInvalidatedException;

@@ -16,7 +16,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/reflection/ReflectionClass.p#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\Reflection;
+namespace HazAClass\System\Reflection;
 
 use HazAClass\utils\StringCaseUtil;
 use HazAClass\utils\ReflectionUtil as Util;
@@ -219,7 +219,7 @@ class ReflectionClass extends \ReflectionClass
 
 	private function getFullQualifiedClassname($tokens)
 	{
-		$classname = '\\';
+		$classname = '';
 		foreach($tokens as $token)
 		{
 			switch($token[0])

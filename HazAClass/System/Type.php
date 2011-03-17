@@ -18,6 +18,8 @@
 
 namespace HazAClass\System;
 
+use HazAClass\System\Reflection\ReflectionClass;
+
 final class Type extends Object
 {
 
@@ -79,7 +81,7 @@ final class Type extends Object
 	public function GetReflectionClass()
 	{
 		if($this->reflectionClass === null)
-			$this->reflectionClass = new \ReflectionClass($this->GetFullName());
+			$this->reflectionClass = new ReflectionClass($this->GetFullName());
 		return $this->reflectionClass;
 	}
 
