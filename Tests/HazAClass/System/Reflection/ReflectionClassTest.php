@@ -5,7 +5,9 @@ namespace HazAClass\System\Reflection;
 use HazAClass\System\Reflection\TestAttributes\TestAttribute;
 use HazAClass\System\Reflection\TestAttributes\TestNamedAttribute;
 use HazAClass\System\Reflection\TestAttributes\TestMixedAttribute;
+use HazAClass\System\Reflection\TestAttributes\ITestAttribute;
 use HazAClass\System\Collection\IList;
+use HazAClass\System\Reflection\TestAttributes\TestEnum;
 
 require_once dirname(__FILE__).'/../../../../HazAClass/System/Reflection/ReflectionClass.php';
 
@@ -38,6 +40,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->object = null;
 	}
+
+	// <editor-fold defaultstate="collapsed" desc=" Test Attribute Existence ">
 
 	/**
 	 * @todo Implement testHasAttribute().
@@ -75,6 +79,37 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	public function testGetAttributes()
 	{
 		$this->assertInstanceOf(IList::IList, $this->object->GetType()->GetReflectionClass()->GetAttributes());
+	}
+
+	// </editor-fold>
+
+	public function testNormalAttribute()
+	{
+		$attr = $this->object->GetType()->GetReflectionClass()->GetAttribute(TestAttribute::$classname);
+		$this->AssertAttribute($attr);
+	}
+
+	public function testNamedAttribute()
+	{
+		$attr = $this->object->GetType()->GetReflectionClass()->GetAttribute(TestNamedAttribute::$classname);
+		$this->AssertAttribute($attr);
+	}
+
+	public function testMixedAttribute()
+	{
+		$attr = $this->object->GetType()->GetReflectionClass()->GetAttribute(TestMixedAttribute::$classname);
+		$this->AssertAttribute($attr);
+	}
+
+	protected function AssertAttribute(ITestAttribute $attr)
+	{
+		$this->assertEquals('teststring', $attr->getStringVar());
+		$this->assertEquals(12345, $attr->getIntVar());
+		$this->assertEquals(12.345, $attr->getDoubleVar());
+		$this->assertSame(TestEnum::TestValue1(), $attr->getEnumVar());
+		$this->assertEquals(true, $attr->getBoolVar());
+		$this->assertEquals(TestEnum::$classname, $attr->getStaticVar());
+		$this->assertEquals(TestEnum::TEST_CONST, $attr->getConstVar());
 	}
 
 	/**

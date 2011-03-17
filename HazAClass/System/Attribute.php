@@ -18,7 +18,7 @@
 
 namespace HazAClass\System;
 
-abstract class Attribute
+abstract class Attribute extends Object
 {
     public static $classname = __CLASS__;
 

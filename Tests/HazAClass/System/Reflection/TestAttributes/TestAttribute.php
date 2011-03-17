@@ -4,7 +4,7 @@ namespace HazAClass\System\Reflection\TestAttributes;
 
 use HazAClass\System\Attribute;
 
-class TestAttribute extends Attribute {
+class TestAttribute extends Attribute implements ITestAttribute {
 
     public static $classname = __CLASS__;
     private $stringVar;

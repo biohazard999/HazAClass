@@ -73,15 +73,15 @@ class AttributeBuilder
 
 
 		$parser = new AttributesParser();
-		$output = $parser->parse($docBlock);
+		$output = $parser->Parse($docBlock);
 
 
 		$tokenizer = new AttributeTokenizer();
-		$tokens = $tokenizer->tokenize($output);
+		$tokens = $tokenizer->Tokenize($output);
 
 		$interpreter = new AttributeInterpreter();
-		$this->attributeValueHolders = $interpreter->interpret($tokens);
-		$this->create();
+		$this->attributeValueHolders = $interpreter->Interpret($tokens);
+		$this->Create();
 	}
 
 	public function Create()
@@ -105,10 +105,15 @@ class AttributeBuilder
 				throw new \InvalidArgumentException('An Attribute must be decendet by '.Attribute::$classname.'
 											  Given: '.$classname);
 
-
 			$attribute = $this->invoke($classname, $valueHolder->getUnnamedParamsAsArray());
 
+
+
 			$this->setNamedParams($attribute, $valueHolder->getNamedParamsAsArray());
+
+
+
+
 			$this->attributes[get_class($attribute)] = $attribute;
 		}
 	}
@@ -118,10 +123,6 @@ class AttributeBuilder
 		$refClass = TypeManager::GetTypeInstance($classname)->GetReflectionClass();
 		try
 		{
-			print_r($classname);
-			echo "\n";
-			print_r($params);
-
 			if($refClass->getConstructor() !== null && count($refClass->getConstructor()->getParameters()) > 0)
 				return $refClass->newInstanceArgs($params);
 			return $refClass->newInstanceArgs();
@@ -136,8 +137,16 @@ class AttributeBuilder
 	{
 		foreach($params as $name => $value)
 		{
-			$setter = ClassNameUtil::buildSetterName($name);
+			$propRef = $attribute->GetType()->GetReflectionClass()->getProperty($name);
+			if($propRef->isPublic())
+			{
+				$propRef->setValue($attribute, $value);
+			}
+			else
+			{
+			$setter = $attribute->GetType()->SetterOf($name);
 			$attribute->$setter($value);
+			}
 		}
 	}
 

@@ -6,7 +6,6 @@ use HazAClass\System\Enum;
 
 final class TestEnum extends Enum
 {
-
 	public static $classname = __CLASS__;
 	const TEST_CONST = 'TEST_CONST_VALUE';
 
@@ -15,9 +14,7 @@ final class TestEnum extends Enum
 		return self::GetInstance(__FUNCTION__);
 	}
 
-	public static
-
-	function TestValue2()
+	public static function TestValue2()
 	{
 		return self::GetInstance(__FUNCTION__);
 	}

@@ -143,7 +143,12 @@ class AttributeInterpreterValueHolder
 		$array = array();
 		foreach($this->params as $param)
 			if($param->isNamed())
-				$array[$param->getName()] = $param->GetValue();
+			{
+				if($param instanceof AbstractAttributeInterpreterValueHolderParameterComplex)
+					$array[$param->getName()] = $this->getComplexParameter($param);
+				else
+					$array[$param->getName()] = $param->getValue();
+			}
 
 		return $array;
 	}

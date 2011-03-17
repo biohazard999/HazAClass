@@ -37,7 +37,7 @@ class AttributeInterpreter
 		$this->valueHolders = new GenericList(AttributeInterpreterValueHolder::$classname);
 	}
 
-	public function interpret($tokens)
+	public function Interpret($tokens)
 	{
 		$this->valueHolders->FlushElements();
 		$this->doInterpret($tokens);
@@ -88,6 +88,8 @@ class AttributeInterpreter
 			return $tokens->getCurrentToken()->getValue();
 	}
 
+	private $valueName;
+
 	protected function interpretValues(Tokens $tokens)
 	{
 		if($tokens->isA(AttributeTokenizer::T_BRACE_OPEN))
@@ -105,25 +107,35 @@ class AttributeInterpreter
 
 					case \T_STRING:
 						$found = false;
-						
+						if($tokens->IsNextTokenA(AttributeTokenizer::T_OPERATOR_ASSIGN))
+						{
+							$this->valueName = $tokens->GetCurrentToken()->GetValue();
+							$tokens->SkipUntil(AttributeTokenizer::T_OPERATOR_ASSIGN);
+							break;
+						}
 						$this->currentValueHolder->addParam($this->tryInterpretEnumValue($tokens, $found));
 						$this->currentValueHolder->addParam($this->tryInterpretClassConstantValue($tokens, $found));
 						$this->currentValueHolder->addParam($this->tryInterpretStaticPropertyValue($tokens, $found));
+						if($found)
+							$this->valueName = null;
 						break;
 					case T_ENCAPSED_AND_WHITESPACE:
 					case T_CONSTANT_ENCAPSED_STRING:
 						$this->currentValueHolder->addParam($this->interpretStringValue($tokens));
+						$this->valueName = null;
 						break;
 					case T_DNUMBER:
 						$this->currentValueHolder->addParam($this->interpretFloatValue($tokens));
+						$this->valueName = null;
 						break;
 					case T_LNUMBER:
 						$this->currentValueHolder->addParam($this->interpretIntValue($tokens));
+						$this->valueName = null;
 						break;
 					case AttributeTokenizer::T_TRUE:
 					case AttributeTokenizer::T_FALSE:
-
 						$this->currentValueHolder->addParam($this->interpretBoolValue($tokens));
+						$this->valueName = null;
 						break;
 				}
 				$tokens->moveNext();
@@ -134,6 +146,7 @@ class AttributeInterpreter
 	protected function interpretBoolValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
+		$p->setName($this->valueName);
 		$v = (boolean) $tokens->getCurrentToken()->getValue();
 		$p->setValue($v);
 		return $p;
@@ -142,6 +155,7 @@ class AttributeInterpreter
 	protected function interpretIntValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
+		$p->setName($this->valueName);
 		$v = (int) $tokens->getCurrentToken()->getValue();
 		$p->setValue($v);
 		return $p;
@@ -150,6 +164,7 @@ class AttributeInterpreter
 	protected function interpretFloatValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
+		$p->setName($this->valueName);
 		$v = (float) $tokens->getCurrentToken()->getValue();
 		$p->setValue($v);
 		return $p;
@@ -158,34 +173,28 @@ class AttributeInterpreter
 	protected function interpretStringValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
-		$v = (string) $tokens->getCurrentToken()->getValue();
+		$p->setName($this->valueName);
+		$v = String::Instance($tokens->getCurrentToken()->getValue());
 		$this->removeApostrophes($v);
-		$p->setValue($v);
+		$p->setValue($v->ToString());
 		return $p;
 	}
 
-	private function removeApostrophes(&$string)
+	private function removeApostrophes(String $string)
 	{
 		$char = '\'';
-		if(!$this->removeTrailingAndLeadingChar($string, $char))
-			$this->removeDoubleQuote($string);
-	}
-
-	private function removeDoubleQuote(&$string)
-	{
-		$this->removeTrailingAndLeadingChar($string, '"');
-	}
-
-	private function removeTrailingAndLeadingChar(&$string, $char)
-	{
-		$str = String::Instance($string);
-		if($str->StartsWith($char))
+		if($string->StartsWith($char))
 		{
-			$str->RemoveBegin($char);
-			$str->RemoveEnd($char);
-			return true;
+			$string->RemoveBegin($char);
+			$string->RemoveEnd($char);
 		}
-		return false;
+		$char = '"';
+
+		if($string->StartsWith($char))
+		{
+			$string->RemoveBegin($char);
+			$string->RemoveEnd($char);
+		}
 	}
 
 	protected function tryInterpretEnumValue(Tokens $tokens, &$found)
@@ -202,6 +211,7 @@ class AttributeInterpreter
 					if($tokens->peak()->isA(AttributeTokenizer::T_BRACE_CLOSE))
 					{
 						$param = new AttributeInterpreterValueHolderParameterEnum();
+						$param->setName($this->valueName);
 						$param->setEnumType((string) $tokens->getCurrentToken()->getValue());
 						$tokens->moveNext();
 						$tokens->skipUntil(\T_STRING);
@@ -226,6 +236,7 @@ class AttributeInterpreter
 			if($tokens->peak()->isA(\T_STRING))
 			{
 				$param = new AttributeInterpreterValueHolderParameterClassConstant();
+				$param->setName($this->valueName);
 				$param->setConstantName((string) $tokens->getCurrentToken()->getValue());
 				$tokens->moveNext();
 				$tokens->skipUntil(\T_STRING);
@@ -246,6 +257,7 @@ class AttributeInterpreter
 			if($tokens->peak()->isA(\T_VARIABLE))
 			{
 				$param = new AttributeInterpreterValueHolderParameterStaticProperty();
+				$param->setName($this->valueName);
 				$param->setPropertyName((string) $tokens->getCurrentToken()->getValue());
 				$tokens->moveNext();
 				$tokens->skipUntil(T_VARIABLE);

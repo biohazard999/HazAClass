@@ -14,7 +14,7 @@ use HazAClass\System\Reflection\TestAttributes\TestMixedAttribute;
  *   stringVar = 'teststring',
  *   intVar = 12345,
  *   doubleVar = 12.345,
- *   enumVar = TestEnum::$classname,
+ *   enumVar = TestEnum::TestValue1(),
  *   boolVar = true,
  *   staticVar = TestEnum::$classname,
  *   constVar = TestEnum::TEST_CONST
@@ -23,7 +23,7 @@ use HazAClass\System\Reflection\TestAttributes\TestMixedAttribute;
  *   'teststring',
  *   12345,
  *   12.345,
- *   enumVar = TestEnum::$classname,
+ *   enumVar = TestEnum::TestValue1(),
  *   boolVar = true,
  *   staticVar = TestEnum::$classname,
  *   constVar = TestEnum::TEST_CONST
