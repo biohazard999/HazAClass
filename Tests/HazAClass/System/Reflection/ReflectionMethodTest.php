@@ -2,6 +2,10 @@
 
 namespace HazAClass\System\Reflection;
 
+use HazAClass\System\Reflection\TestAttributes\TestAttribute;
+use HazAClass\System\Reflection\TestAttributes\TestNamedAttribute;
+use HazAClass\System\Reflection\TestAttributes\TestMixedAttribute;
+
 require_once dirname(__FILE__).'/../../../../HazAClass/System/Reflection/ReflectionMethod.php';
 
 /**
@@ -10,62 +14,91 @@ require_once dirname(__FILE__).'/../../../../HazAClass/System/Reflection/Reflect
  */
 class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 {
+	const METHOD_NAME = 'TestMethod';
 
 	/**
 	 * @var ReflectionMethod
 	 */
 	protected $object;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
 	protected function setUp()
 	{
-		$this->object = new ReflectionMethod;
+		$object = new ReflectionTestClass();
+		$this->object = $object->GetType()->GetReflectionClass()->getMethod(self::METHOD_NAME);
 	}
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
 	protected function tearDown()
 	{
-		
+		$this->object = null;
 	}
 
 	/**
 	 * @todo Implement testHasAttribute().
 	 */
-	public function testHasAttribute()
+	public function testHasAttributeNormal()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertTrue($this->object->HasAttribute(TestAttribute::$classname));
 	}
 
-	/**
-	 * @todo Implement testGetAttribute().
-	 */
-	public function testGetAttribute()
+	public function testHasAttributeNamed()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertTrue($this->object->HasAttribute(TestNamedAttribute::$classname));
 	}
 
-	/**
-	 * @todo Implement testGetAttributes().
-	 */
+	public function testHasAttributeMixed()
+	{
+		$this->assertTrue($this->object->HasAttribute(TestMixedAttribute::$classname));
+	}
+
+	public function testGetAttributeNormal()
+	{
+		$this->assertInstanceOf(TestAttribute::$classname, $this->object->GetAttribute(TestAttribute::$classname));
+	}
+
+	public function testGetAttributeNamed()
+	{
+		$this->assertInstanceOf(TestNamedAttribute::$classname, $this->object->GetAttribute(TestNamedAttribute::$classname));
+	}
+
+	public function testGetAttributeMixed()
+	{
+		$this->assertInstanceOf(TestMixedAttribute::$classname, $this->object->GetAttribute(TestMixedAttribute::$classname));
+	}
+
 	public function testGetAttributes()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf(IList::IList, $this->object->GetAttributes());
 	}
+
+	public function testNormalAttribute()
+	{
+		$attr = $this->object->GetAttribute(TestAttribute::$classname);
+		$this->AssertAttribute($attr);
+	}
+
+	public function testNamedAttribute()
+	{
+		$attr = $this->object->GetAttribute(TestNamedAttribute::$classname);
+		$this->AssertAttribute($attr);
+	}
+
+	public function testMixedAttribute()
+	{
+		$attr = $this->object->GetAttribute(TestMixedAttribute::$classname);
+		$this->AssertAttribute($attr);
+	}
+
+	protected function AssertAttribute(ITestAttribute $attr)
+	{
+		$this->assertEquals('teststring', $attr->getStringVar());
+		$this->assertEquals(12345, $attr->getIntVar());
+		$this->assertEquals(12.345, $attr->getDoubleVar());
+		$this->assertSame(TestEnum::TestValue1(), $attr->getEnumVar());
+		$this->assertEquals(true, $attr->getBoolVar());
+		$this->assertEquals(TestEnum::$classname, $attr->getStaticVar());
+		$this->assertEquals(TestEnum::TEST_CONST, $attr->getConstVar());
+	}
+
 
 	/**
 	 * @todo Implement testGetDeclaringClass().
@@ -77,51 +110,6 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 			'This test has not been implemented yet.'
 		);
 	}
-
-	/**
-	 * @todo Implement testGetUsings().
-	 */
-	public function testGetUsings()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @todo Implement testInNamespace().
-	 */
-	public function testInNamespace()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @todo Implement testGetNamespaceName().
-	 */
-	public function testGetNamespaceName()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @todo Implement testGetFileName().
-	 */
-	public function testGetFileName()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
 }
 
 ?>

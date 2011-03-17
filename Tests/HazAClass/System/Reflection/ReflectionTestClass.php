@@ -39,7 +39,7 @@ class ReflectionTestClass extends Object
 	 *   stringVar = 'teststring',
 	 *   intVar = 12345,
 	 *   doubleVar = 12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -48,7 +48,7 @@ class ReflectionTestClass extends Object
 	 *   'teststring',
 	 *   12345,
 	 *   12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -62,7 +62,7 @@ class ReflectionTestClass extends Object
 	 *   stringVar = 'teststring',
 	 *   intVar = 12345,
 	 *   doubleVar = 12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -71,7 +71,7 @@ class ReflectionTestClass extends Object
 	 *   'teststring',
 	 *   12345,
 	 *   12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -85,7 +85,7 @@ class ReflectionTestClass extends Object
 	 *   stringVar = 'teststring',
 	 *   intVar = 12345,
 	 *   doubleVar = 12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -94,7 +94,7 @@ class ReflectionTestClass extends Object
 	 *   'teststring',
 	 *   12345,
 	 *   12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -108,7 +108,7 @@ class ReflectionTestClass extends Object
 	 *   stringVar = 'teststring',
 	 *   intVar = 12345,
 	 *   doubleVar = 12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
@@ -117,13 +117,39 @@ class ReflectionTestClass extends Object
 	 *   'teststring',
 	 *   12345,
 	 *   12.345,
-	 *   enumVar = TestEnum::$classname,
+	 *   enumVar = TestEnum::TestValue1(),
 	 *   boolVar = true,
 	 *   staticVar = TestEnum::$classname,
 	 *   constVar = TestEnum::TEST_CONST
 	 * )
 	 */
 	public function TestMethod()
+	{
+
+	}
+
+	/**
+	 * @TestAttribute('teststring', 12345, 12.345, TestEnum::TestValue1(), true, TestEnum::$classname, TestEnum::TEST_CONST)
+	 * @TestNamedAttribute(
+	 *   stringVar = 'teststring',
+	 *   intVar = 12345,
+	 *   doubleVar = 12.345,
+	 *   enumVar = TestEnum::TestValue1(),
+	 *   boolVar = true,
+	 *   staticVar = TestEnum::$classname,
+	 *   constVar = TestEnum::TEST_CONST
+	 * )
+	 * @TestMixedAttribute(
+	 *   'teststring',
+	 *   12345,
+	 *   12.345,
+	 *   enumVar = TestEnum::TestValue1(),
+	 *   boolVar = true,
+	 *   staticVar = TestEnum::$classname,
+	 *   constVar = TestEnum::TEST_CONST
+	 * )
+	 */
+	public function __construct()
 	{
 
 	}

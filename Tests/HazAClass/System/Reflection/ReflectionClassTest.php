@@ -8,6 +8,7 @@ use HazAClass\System\Reflection\TestAttributes\TestMixedAttribute;
 use HazAClass\System\Reflection\TestAttributes\ITestAttribute;
 use HazAClass\System\Collection\IList;
 use HazAClass\System\Reflection\TestAttributes\TestEnum;
+use HazAClass\System\Object;
 
 require_once dirname(__FILE__).'/../../../../HazAClass/System/Reflection/ReflectionClass.php';
 
@@ -23,25 +24,16 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected $object;
 
-	/**
-	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
-	 */
 	protected function setUp()
 	{
 		$this->object = new ReflectionTestClass();
 	}
 
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
 	protected function tearDown()
 	{
 		$this->object = null;
 	}
 
-	// <editor-fold defaultstate="collapsed" desc=" Test Attribute Existence ">
 
 	/**
 	 * @todo Implement testHasAttribute().
@@ -81,8 +73,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf(IList::IList, $this->object->GetType()->GetReflectionClass()->GetAttributes());
 	}
 
-	// </editor-fold>
-
 	public function testNormalAttribute()
 	{
 		$attr = $this->object->GetType()->GetReflectionClass()->GetAttribute(TestAttribute::$classname);
@@ -112,59 +102,37 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(TestEnum::TEST_CONST, $attr->getConstVar());
 	}
 
-	/**
-	 * @todo Implement testGetConstructor().
-	 */
 	public function testGetConstructor()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf(ReflectionMethod::$classname, $this->object->GetType()->GetReflectionClass()->getConstructor());
 	}
 
-	/**
-	 * @todo Implement testGetMethod().
-	 */
 	public function testGetMethod()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$method = $this->object->GetType()->GetReflectionClass()->getMethod('TestMethod');
+		$this->assertInstanceOf(ReflectionMethod::$classname, $method);
+		$this->assertEquals('TestMethod', $method->getName());
 	}
 
-	/**
-	 * @todo Implement testGetMethods().
-	 */
 	public function testGetMethods()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$methods = $this->object->GetType()->GetReflectionClass()->getMethods();
+		$this->assertEquals(9, $methods->count());
+		$this->assertInstanceOf(IList::IList, $methods);
 	}
 
-	/**
-	 * @todo Implement testGetProperty().
-	 */
 	public function testGetProperty()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$prop = $this->object->GetType()->GetReflectionClass()->getProperty('TestProperty');
+		$this->assertInstanceOf(ReflectionProperty::$classname, $prop);
+		$this->assertEquals('TestProperty', $prop->getName());
 	}
 
-	/**
-	 * @todo Implement testGetProperties().
-	 */
 	public function testGetProperties()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$properties = $this->object->GetType()->GetReflectionClass()->getProperties();
+		$this->assertEquals(3, $properties->count());
+		$this->assertInstanceOf(IList::IList, $properties);
 	}
 
 	/**
@@ -172,10 +140,10 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetInterfaces()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$interfaces = $this->object->GetType()->GetReflectionClass()->getInterfaces();
+		print_r($interfaces);
+		$this->assertInstanceOf(IList::IList, $interfaces);
+		$this->assertEquals(2, $interfaces->count());
 	}
 
 	/**
@@ -183,21 +151,13 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetParentClass()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf(ReflectionClass::$classname, $this->object->GetType()->GetReflectionClass()->getParentClass());
+		$this->assertEquals(Object::$classname, $this->object->GetType()->GetReflectionClass()->getParentClass()->getName());
 	}
 
-	/**
-	 * @todo Implement testGetUsings().
-	 */
 	public function testGetUsings()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf(IList::IList, $this->object->GetType()->GetReflectionClass()->GetUsings());
 	}
 
 }

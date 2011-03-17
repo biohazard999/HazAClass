@@ -1,5 +1,4 @@
 <?php
-
 /** * *******************************************************************************************************$
  * $Id:: DocumentHeadRenderer.php 199 2009-09-30 19:57:12Z manuelgrundner                                   $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
@@ -21,44 +20,55 @@ namespace HazAClass\System;
 
 include_once 'IObject.php';
 
-abstract class Object implements IObject {
+abstract class Object implements IObject
+{
 
-    public static $classname = __CLASS__;
+	public static $classname = __CLASS__;
 
-    public function GetHash() {
-        return spl_object_hash($this);
-    }
+	public function GetHash()
+	{
+		return spl_object_hash($this);
+	}
 
-    public function ToString() {
-        return $this->GetClassName() . ' (' . $this->GetHash() . ')';
-    }
+	public function ToString()
+	{
+		return $this->GetClassName().' ('.$this->GetHash().')';
+	}
 
-    final public function __toString() {
-        try {
-            return $this->ToString();
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
+	final public function __toString()
+	{
+		try
+		{
+			return $this->ToString();
+		}
+		catch(\Exception $e)
+		{
+			return $e->getMessage();
+		}
+	}
 
-    /**
-     * @return Type
-     */
-    final public function GetType() {
-        return TypeManager::Instance()->GetType($this->GetClassName());
-    }
+	/**
+	 * @return Type
+	 */
+	final public function GetType()
+	{
+		return TypeManager::Instance()->GetType($this->GetClassName());
+	}
 
-    final public function GetClassName() {
-        return get_class($this);
-    }
+	final public function GetClassName()
+	{
+		return get_class($this);
+	}
 
-    final public static function ReferenceEqualsStatic(IObject $objectA, IObject $objectB) {
-        return $objectA === $objectB;
-    }
+	final public static function ReferenceEqualsStatic(IObject $objectA, IObject $objectB)
+	{
+		return $objectA === $objectB;
+	}
 
-    public function ReferenceEquals(IObject $obj) {
-        return $this === $obj;
-    }
+	public function ReferenceEquals(IObject $obj)
+	{
+		return $this === $obj;
+	}
 
 }
 

@@ -20,6 +20,7 @@ namespace HazAClass\System\Reflection;
 
 use HazAClass\System\Reflection\Usings\UsingsParser;
 use HazAClass\System\Reflection\Attributes\AttributeBuilder;
+use HazAClass\System\Collection\Generic\GenericList;
 
 class ReflectionClass extends \ReflectionClass
 {
@@ -65,11 +66,15 @@ class ReflectionClass extends \ReflectionClass
 		return $this->createOverrideReflectionMethod(parent::getMethod($name));
 	}
 
+	/**
+	 * @param int $filter
+	 * @return IList
+	 */
 	public function getMethods($filter = -1)
 	{
-		$result = array();
+		$result = new GenericList(ReflectionMethod::$classname);
 		foreach(parent::getMethods($filter) as $method)
-			$result[] = $this->createOverrideReflectionMethod($method);
+			$result[$method->getName()] = $this->createOverrideReflectionMethod($method);
 
 		return $result;
 	}
@@ -83,20 +88,24 @@ class ReflectionClass extends \ReflectionClass
 		return $this->createOverrideReflectionProperty(parent::getProperty($name));
 	}
 
+	/**
+	 * @param int $filter
+	 * @return IList
+	 */
 	public function getProperties($filter = -1)
 	{
-		$result = array();
+		$result = new GenericList(ReflectionProperty::$classname);
 		foreach(parent::getProperties($filter) as $property)
-			$result[] = $this->createOverrideReflectionProperty($property);
+			$result[$property->getName()] = $this->createOverrideReflectionProperty($property);
 
 		return $result;
 	}
 
 	public function getInterfaces()
 	{
-		$result = array();
+		$result = new GenericList(ReflectionClass::$classname);
 		foreach(parent::getInterfaces() as $interface)
-			$result[] = $this->createOverrideReflectionClass($interface);
+			$result[$interface->getName()] = $this->createOverrideReflectionClass($interface);
 
 		return $result;
 	}
