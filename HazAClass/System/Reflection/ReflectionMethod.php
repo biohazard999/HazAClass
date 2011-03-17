@@ -29,12 +29,12 @@ class ReflectionMethod extends \ReflectionMethod
 
 	public function HasAttribute($name)
 	{
-		return $this->getAttributes()->hasIndex($name);
+		return $this->getAttributes()->IndexExists($name);
 	}
 
 	public function GetAttribute($name)
 	{
-		return $this->getAttributes()->get($name);
+		return $this->getAttributes()->offsetGet($name);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class ReflectionMethod extends \ReflectionMethod
 		if($this->attributes === null)
 		{
 			$builder = new AttributeBuilder($this);
-			$this->attributes = $builder->getAttributes();
+			$this->attributes = $builder->GetAttributes();
 		}
 		return $this->attributes;
 	}

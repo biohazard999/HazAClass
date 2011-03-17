@@ -5,6 +5,9 @@ namespace HazAClass\System\Reflection;
 use HazAClass\System\Reflection\TestAttributes\TestAttribute;
 use HazAClass\System\Reflection\TestAttributes\TestNamedAttribute;
 use HazAClass\System\Reflection\TestAttributes\TestMixedAttribute;
+use HazAClass\System\Collection\IList;
+use HazAClass\System\Reflection\TestAttributes\ITestAttribute;
+use HazAClass\System\Reflection\TestAttributes\TestEnum;
 
 require_once dirname(__FILE__).'/../../../../HazAClass/System/Reflection/ReflectionMethod.php';
 
@@ -99,16 +102,9 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(TestEnum::TEST_CONST, $attr->getConstVar());
 	}
 
-
-	/**
-	 * @todo Implement testGetDeclaringClass().
-	 */
 	public function testGetDeclaringClass()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertInstanceOf(ReflectionClass::$classname, $this->object->getDeclaringClass());
 	}
 }
 

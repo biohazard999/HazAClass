@@ -24,6 +24,7 @@ use HazAClass\System\Collection\Generic\GenericList;
 use HazAClass\System\Attribute;
 use HazAClass\System\Type;
 use HazAClass\System\TypeManager;
+use HazAClass\System\Reflection\ReflectionClass;
 
 class AttributeBuilder
 {
@@ -174,9 +175,11 @@ class AttributeBuilder
 				return $name;
 		}
 
-		if($this->reflector->inNamespace())
+		$reflector = $this->reflector instanceof ReflectionClass ? $this->reflector : $this->reflector->getDeclaringClass();
+
+		if($reflector->inNamespace())
 		{
-			$ns = $this->reflector->getNamespaceName().self::NS_SEP;
+			$ns = $reflector->getNamespaceName().self::NS_SEP;
 			$name = $ns.$valueHolder->getShortName();
 			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
@@ -186,7 +189,11 @@ class AttributeBuilder
 				return $name;
 		}
 
-		$refUsings = $this->reflector->getUsings();
+		if($this->reflector instanceof ReflectionClass)
+			$refUsings = $this->reflector->getUsings();
+		else
+			$refUsings = $this->reflector->getDeclaringClass()->getUsings();
+		
 
 		foreach($refUsings as $shortName => $fullName)
 			if($shortName === $valueHolder->getFullName() || $shortName === $valueHolder->getShortName())

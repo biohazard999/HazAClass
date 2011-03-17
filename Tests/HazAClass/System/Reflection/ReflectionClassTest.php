@@ -141,7 +141,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	public function testGetInterfaces()
 	{
 		$interfaces = $this->object->GetType()->GetReflectionClass()->getInterfaces();
-		print_r($interfaces);
 		$this->assertInstanceOf(IList::IList, $interfaces);
 		$this->assertEquals(2, $interfaces->count());
 	}
