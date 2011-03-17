@@ -18,20 +18,8 @@
 
 namespace HazAClass\System\Reflection;
 
-use HazAClass\utils\StringCaseUtil;
-use HazAClass\utils\ReflectionUtil as Util;
-use HazAClass\core\config\system\performance\UsingsCache;
-use HazAClass\core\cache\CacheInvalidatedException;
-use HazAClass\core\cache\iCacheProvider;
-use HazAClass\core\config\system\performance\Attributes;
-use HazAClass\core\config\system\performance\FileChangedCache;
-use HazAClass\core\cache\CacheFactory;
-use HazAClass\core\cache\CacheHelper;
-use HazAClass\core\debug\Debug;
-use HazAClass\core\attributes\AttributeBuilder;
-use HazAClass\utils\ClassNameUtil;
-use HazAClass\System\Collection\ArrayList;
 use HazAClass\System\Reflection\Usings\UsingsParser;
+use HazAClass\System\Reflection\Attributes\AttributeBuilder;
 
 class ReflectionClass extends \ReflectionClass
 {
@@ -42,12 +30,12 @@ class ReflectionClass extends \ReflectionClass
 
 	public function HasAttribute($name)
 	{
-		return $this->getAttributes()->hasIndex($name);
+		return $this->GetAttributes()->IndexExists($name);
 	}
 
 	public function GetAttribute($name)
 	{
-		return $this->getAttributes()->get($name);
+		return $this->GetAttributes()->offsetGet($name);
 	}
 
 	/**
@@ -147,7 +135,6 @@ class ReflectionClass extends \ReflectionClass
 
 		return $this->usings;
 	}
-
 }
 
 ?>

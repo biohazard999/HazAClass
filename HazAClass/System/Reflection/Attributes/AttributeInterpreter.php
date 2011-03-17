@@ -16,32 +16,30 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\core\attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-use HazAClass\utils\ReflectionUtil;
-use HazAClass\core\interpreter\IInterpreter;
-use HazAClass\core\tokenizer\Token;
-use HazAClass\core\tokenizer\Tokens;
-use HazAClass\core\attributes\AttributeTokenizer;
-use HazAClass\core\collections\Collection;
-use HazAClass\core\debug\Debug;
-use HazAClass\utils\StringUtil;
+use HazAClass\System\Collection\Generic\GenericList;
+use HazAClass\System\Parser\Token\Tokens;
+use HazAClass\System\String;
 
-class AttributeInterpreter implements IInterpreter
+class AttributeInterpreter
 {
 
 	public static $classname = __CLASS__;
+	/**
+	 * @var GenericList
+	 */
 	private $valueHolders;
 	private $currentValueHolder;
 
 	public function __construct()
 	{
-		$this->valueHolders = new Collection(AttributeInterpreterValueHolder::$classname);
+		$this->valueHolders = new GenericList(AttributeInterpreterValueHolder::$classname);
 	}
 
 	public function interpret($tokens)
 	{
-		$this->valueHolders->flush();
+		$this->valueHolders->FlushElements();
 		$this->doInterpret($tokens);
 
 		return $this->valueHolders;
@@ -180,10 +178,11 @@ class AttributeInterpreter implements IInterpreter
 
 	private function removeTrailingAndLeadingChar(&$string, $char)
 	{
-		if(StringUtil::startsWith($string, $char))
+		$str = String::Instance($string);
+		if($str->StartsWith($char))
 		{
-			$string = StringUtil::removeBegin($string, $char);
-			$string = StringUtil::removeEnd($string, $char);
+			$str->RemoveBegin($char);
+			$str->RemoveEnd($char);
 			return true;
 		}
 		return false;

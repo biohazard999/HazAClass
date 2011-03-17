@@ -22,5 +22,7 @@ abstract class Attribute
 {
     public static $classname = __CLASS__;
 
+	const ATTRIBUTE_APPENDIX = 'Attribute';
+
 }
 ?>

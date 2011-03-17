@@ -1,6 +1,8 @@
 <?php
 
-namespace HazAClass\System\TestAttributes;
+namespace HazAClass\System\Reflection\TestAttributes;
+
+use HazAClass\System\Attribute;
 
 class TestAttribute extends Attribute {
 
@@ -13,7 +15,7 @@ class TestAttribute extends Attribute {
     private $staticVar;
     private $constVar;
 
-    public function __construct($stringVar, $intVar, $doubleVar, $enumVar, $boolVar, $staticVar, $constVar) {
+    public function __construct($stringVar, $intVar, $doubleVar, TestEnum $enumVar, $boolVar, $staticVar, $constVar) {
         $this->stringVar = $stringVar;
         $this->intVar = $intVar;
         $this->doubleVar = $doubleVar;

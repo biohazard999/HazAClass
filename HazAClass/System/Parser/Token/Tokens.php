@@ -41,7 +41,7 @@ class Tokens extends Object
 	public function SetPosition($position)
 	{
 		$this->position = $position;
-		if($this->tokens->hasIndex($position))
+		if($this->tokens->IndexExists($position))
 			$this->currentToken = $this->tokens[$position];
 	}
 
@@ -86,7 +86,7 @@ class Tokens extends Object
 
 	public function HasNext()
 	{
-		return $this->tokens->hasIndex($this->position + 1);
+		return $this->tokens->IndexExists($this->position + 1);
 	}
 
 	public function SkipUntil($type)

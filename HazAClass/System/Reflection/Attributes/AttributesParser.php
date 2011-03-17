@@ -17,24 +17,23 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributesParser.#$
  ********************************************************************************************************** */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-use HazAClass\core\parser\iParser;
-use HazAClass\utils\StringUtil;
-use HazAClass\utils\StringTrimUtil;
+use HazAClass\System\String;
 
-class AttributesParser implements iParser
+class AttributesParser
 {
 
     public static $classname = __CLASS__;
 
     public function parse($docblock)
     {
-        $docblock = StringUtil::remove($docblock, AttributeTokenizer::T_STAR_COMMENT_BEGIN);
-        $docblock = StringUtil::remove($docblock, AttributeTokenizer::T_STAR_COMMENT_END);
-        $docblock = StringUtil::remove($docblock, AttributeTokenizer::T_STAR);
-        $docblock = StringTrimUtil::trim($docblock);
-		return $docblock;
+		$docBlockString = new String($docblock);
+		$docBlockString->RemoveBegin(AttributeTokenizer::T_STAR_COMMENT_BEGIN);
+		$docBlockString->RemoveEnd(AttributeTokenizer::T_STAR_COMMENT_END);
+		$docBlockString->Remove(AttributeTokenizer::T_STAR);
+		$docBlockString->Trim();
+		return $docBlockString->ToString();
     }
 
 }

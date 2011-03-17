@@ -16,7 +16,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeTokenize#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
 use HazAClass\System\Parser\Token\AbstractTokenizer;
 

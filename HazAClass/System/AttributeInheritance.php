@@ -1,7 +1,7 @@
 <?php
 
 /** * *******************************************************************************************************$
- * $Id:: AttributeUsageAttribute.php 48 2010-11-28 09:03:29Z manuelgrundner                                 $
+ * $Id:: AttributeInheritance.php 48 2010-11-28 09:03:29Z manuelgrundner                                    $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
  * @copyright Copyright (c) 2009, Manuel Grundner & Ren� Grundner                                           $
  *                                                                                                          $
@@ -14,42 +14,24 @@
  * $LastChangedDate:: 2010-11-28 10:03:29 +0100 (So, 28 Nov 2010)                                           $
  * $LastChangedRevision:: 48                                                                                $
  * $LastChangedBy:: manuelgrundner                                                                          $
- * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeUsageAtt#$
+ * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInherita#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System;
 
-use HazAClass\System\Attribute;
-
-class AttributeUsageAttribute extends Attribute
+class AttributeInheritance extends Enum
 {
 
 	public static $classname = __CLASS__;
-	private $attributeUsage;
-	private $attributeInheritance;
 
-	public function __construct(AttributeUsage $attributeUsage, AttributeInheritance $inheritance = null)
+	public static function Inherited()
 	{
-		if($inheritance === null)
-			$inheritance = AttributeInheritance::notInherited();
-		$this->attributeUsage = $attributeUsage;
-		$this->attributeInheritance = $inheritance;
+		return self::GetInstance(__FUNCTION__);
 	}
 
-	/**
-	 * @return AttributeUsage
-	 */
-	public function getAttributeUsage()
+	public static function NotInherited()
 	{
-		return $this->attributeUsage;
-	}
-
-	/**
-	 * @return AttributeInheritance
-	 */
-	public function getAttributeInheritance()
-	{
-		return $this->attributeInheritance;
+		return self::GetInstance(__FUNCTION__);
 	}
 
 }

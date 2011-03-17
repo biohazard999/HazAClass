@@ -16,15 +16,14 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\core\attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-use HazAClass\core\tokenizer\Token;
-use HazAClass\core\collections\Collection;
-use HazAClass\utils\StringUtil;
-use HazAClass\core\debug\Debug;
-use HazAClass\utils\ClassNameUtil;
-use HazAClass\utils\ReflectionUtil;
-use HazAClass\core\reflection\ReflectionClass;
+use HazAClass\System\Collection\Generic\GenericList;
+use HazAClass\System\Attribute;
+use HazAClass\System\String;
+use HazAClass\System\Type;
+use HazAClass\System\Reflection\ReflectionClass;
+use HazAClass\System\TypeManager;
 
 class AttributeInterpreterValueHolder
 {
@@ -92,19 +91,20 @@ class AttributeInterpreterValueHolder
 
 	public function getFullName()
 	{
-		if(!StringUtil::endsWith($this->name, Attribute::ATTRIBUTE_APPENDIX))
+		if(!String::Instance($this->name)->EndsWith(Attribute::ATTRIBUTE_APPENDIX))
 			return $this->name.Attribute::ATTRIBUTE_APPENDIX;
 		return $this->name;
 	}
 
 	public function isFullQualified()
 	{
-		return ClassNameUtil::isFullQualified($this->name);
+		return Type::IsClassnameFullQualified($this->name);
+
 	}
 
 	public function isParitallyQualified()
 	{
-		return ClassNameUtil::isParitallyQualified($this->name);
+		return Type::IsClassnameParitallyQualified($this->name);
 	}
 
 	public function getFullQualifiedName()
@@ -114,7 +114,7 @@ class AttributeInterpreterValueHolder
 
 	public function getShortName()
 	{
-		return StringUtil::removeEnd($this->name, Attribute::ATTRIBUTE_APPENDIX);
+		return String::Instance($this->name)->RemoveEnd(Attribute::ATTRIBUTE_APPENDIX);
 	}
 
 	public function addParam(AbstractAttributeInterpreterValueHolderParameter $param = null)
@@ -179,7 +179,7 @@ class AttributeInterpreterValueHolder
 		{
 			$enumName = $this->findComplexParamsFullName($param, $this->getReflectionClass());
 			$param->setFullQualifiedName($enumName);
-			$enumRef = ReflectionUtil::getReflectionClass($enumName);
+			$enumRef = TypeManager::GetTypeInstance($enumName)->GetReflectionClass();
 			return \call_user_func(array($enumName, $param->getValue()));
 		}
 	}
@@ -191,8 +191,8 @@ class AttributeInterpreterValueHolder
 			$constantClassName = $this->findComplexParamsFullName($param, $this->getReflectionClass());
 			$param->setFullQualifiedName($constantClassName);
 
-			$constantRef = ReflectionUtil::getReflectionClass($constantClassName);
-			return ReflectionUtil::constant($constantClassName, $param->getValue());
+			$constantRef = TypeManager::GetTypeInstance($constantClassName)->GetReflectionClass();
+			return $constantRef->getConstant($param->getValue());
 		}
 	}
 
@@ -202,22 +202,22 @@ class AttributeInterpreterValueHolder
 		{
 			$staticPropertyClassName = $this->findComplexParamsFullName($param, $this->getReflectionClass());
 			$param->setFullQualifiedName($staticPropertyClassName);
-			$constantRef = ReflectionUtil::getReflectionClass($staticPropertyClassName);
+			$constantRef = TypeManager::GetTypeInstance($staticPropertyClassName)->GetReflectionClass();
 			return $constantRef->getProperty($param->getValue())->GetValue();
 		}
 	}
 
 	private function findComplexParamsFullName(AbstractAttributeInterpreterValueHolderParameterComplex $param, ReflectionClass $ref)
 	{
-		if(ClassNameUtil::isFullQualified($param->getShortName()))
+		if(Type::IsClassnameFullQualified($param->getShortName()))
 		{
-			if(ReflectionUtil::classOrInterfaceExists($param->getShortName()))
+			if(Type::IsTypeExisting($param->getShortName()))
 				return $param->getShortName();
 		}
 		else
 		{
 			$name = self::NS_SEP.$param->getShortName();
-			if(ReflectionUtil::classOrInterfaceExists($name))
+			if(Type::IsTypeExisting($name))
 				return $name;
 		}
 
@@ -225,7 +225,7 @@ class AttributeInterpreterValueHolder
 		{
 			$ns = $ref->getNamespaceName().self::NS_SEP;
 			$name = $ns.$param->getShortName();
-			if(ReflectionUtil::classOrInterfaceExists($name))
+			if(Type::IsTypeExisting($name))
 				return $name;
 		}
 
@@ -233,7 +233,7 @@ class AttributeInterpreterValueHolder
 
 		foreach($refUsings as $shortName => $fullName)
 			if($shortName === $param->getShortName())
-				if(ReflectionUtil::classOrInterfaceExists($fullName))
+				if(Type::IsTypeExisting($fullName))
 					return $fullName;
 	}
 

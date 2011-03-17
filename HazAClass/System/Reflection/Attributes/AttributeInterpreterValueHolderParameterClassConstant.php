@@ -1,6 +1,6 @@
 <?php
 /** * *******************************************************************************************************$
- * $Id:: AttributeUsage.php 6 2010-11-07 15:18:15Z manuelgrundner                                           $
+ * $Id:: AttributeInterpreterValueHolderParameterClassConstant.php 4 2010-11-06 12:37:02Z manuelgrundner    $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
  * @copyright Copyright (c) 2009, Manuel Grundner & Ren� Grundner                                           $
  *                                                                                                          $
@@ -10,37 +10,38 @@
  * @subpackage                                                                                              $
  *                                                                                                          $
  * *****************************************Subversion Information********************************************
- * $LastChangedDate:: 2010-11-07 16:18:15 +0100 (So, 07 Nov 2010)                                           $
- * $LastChangedRevision:: 6                                                                                 $
+ * $LastChangedDate:: 2010-11-06 13:37:02 +0100 (Sa, 06 Nov 2010)                                           $
+ * $LastChangedRevision:: 4                                                                                 $
  * $LastChangedBy:: manuelgrundner                                                                          $
- * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeUsage.ph#$
+ * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-class AttributeUsage extends Enum
+class AttributeInterpreterValueHolderParameterClassConstant extends AbstractAttributeInterpreterValueHolderParameterComplex
 {
 
 	public static $classname = __CLASS__;
+	private $constantName;
 
-	public static function onClass()
+	public function GetConstantName()
 	{
-		return self::GetInstance(__FUNCTION__);
+		return $this->constantName;
 	}
 
-	public static function onMethod()
+	public function SetConstantName($constantName)
 	{
-		return self::GetInstance(__FUNCTION__);
+		$this->constantName = $constantName;
 	}
 
-	public static function onProperty()
+	public function GetShortName()
 	{
-		return self::GetInstance(__FUNCTION__);
+		return $this->GetConstantName();
 	}
 
-	public static function onAny()
+	public function SetShortName($shortName)
 	{
-		return self::GetInstance(__FUNCTION__);
+		$this->SetConstantName($shortName);
 	}
 
 }

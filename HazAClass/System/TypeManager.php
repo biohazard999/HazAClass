@@ -45,12 +45,21 @@ final class TypeManager
 		return self::$instance;
 	}
 
-	public function getType($classname)
+	public function GetType($classname)
 	{
 		if(!array_key_exists($classname, $this->types))
 			$this->types[$classname] = new Type($classname);
 
 		return $this->types[$classname];
+	}
+
+	/**
+	 * @param string $classname
+	 * @return Type
+	 */
+	public static function GetTypeInstance($classname)
+	{
+		return self::Instance()->GetType($classname);
 	}
 
 }
