@@ -170,7 +170,6 @@ final class Type extends Object
 	public static function IsClassnameParitallyQualified($classname)
 	{
 		return String::Instance($classname)->Contains('\\');
-		;
 	}
 
 	public static function IsClassnameFullQualified($classname)

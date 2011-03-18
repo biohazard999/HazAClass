@@ -62,11 +62,9 @@ final class Event extends Object implements \ArrayAccess
 	public function offsetSet($offset, $value)
 	{
 		if($offset === '-')
-			$this->delegates->Remove($value);
+			$this->RemoveDelegate($value);
 		else
-		{
-			$this->delegates[] = $value;
-		}
+			$this->AddDelegate($value);
 	}
 
 	public function offsetUnset($offset)
