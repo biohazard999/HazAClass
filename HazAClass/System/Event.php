@@ -43,7 +43,7 @@ final class Event extends Object implements \ArrayAccess
 	public function Fire(ObserableObject $obObject, EventArguments $eventArguments)
 	{
 		if(!$eventArguments->GetType()->IsTypeOf(TypeManager::GetTypeInstance($this->eventArgumentName)))
-			throw new InvalidArgumentException('Given Argument is not type of '.$this->eventArgumentName);
+			throw new \InvalidArgumentException('Given Argument is not type of '.$this->eventArgumentName);
 
 		foreach($this->delegates as $delegate)
 			$delegate->Invoke($obObject, $eventArguments);

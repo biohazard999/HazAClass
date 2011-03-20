@@ -30,21 +30,44 @@ class ObserableObjectTest extends \PHPUnit_Framework_TestCase
 		$obj->FireOnTest();
 		$this->assertTrue($obj->HasFired());
 	}
-
+	
+	public function testCustomEventArgsFail()
+	{
+		$this->setExpectedException('\\InvalidArgumentException');
+		$obj = new TestObservableObject();
+		$obj->FireOnTestCustomArgsFail();
+	}
+	
+	public function testCustomEventArgsSuccess()
+	{
+		$obj = new TestObservableObject();
+		
+		$this->assertNull($obj->customEventArgs);
+		
+		$obj->FireOnTestCustomArgsSuccess();
+		$this->assertInstanceOf(PrivateEventArgs::$classname, $obj->customEventArgs);
+		$this->assertEquals(1, $obj->customEventArgs->MyValue1);
+	}
 }
 
 /**
  * @property Event $onTest
+ * @property Event $onTestCustomArgs
  */
 class TestObservableObject extends ObserableObject
 {
 	const onTest = 'onTest';
+	const onTestCustomArgs = 'onTestCustomArgs';
 
 	private $fired = false;
+	
+	public $customEventArgs;
 
 	public function __construct()
 	{
 		$this->RegisterEvent(new Event(self::onTest));
+		$this->RegisterEvent(new Event(self::onTestCustomArgs, PrivateEventArgs::$classname));
+		$this->onTestCustomArgs[] = new Delegate($this, 'TheTestEventListenerCustomEventArgs');
 	}
 
 	public function FireOnTest()
@@ -70,6 +93,39 @@ class TestObservableObject extends ObserableObject
 	public function HasFired()
 	{
 		return $this->fired;
+	}
+
+	public function FireOnTestCustomArgsSuccess()
+	{
+		$this->onTestCustomArgs->Fire($this, new PrivateEventArgs(1));
+	}
+	
+	public function FireOnTestCustomArgsFail()
+	{
+		$this->onTestCustomArgs->Fire($this, new EventArguments());
+	}
+	
+	/**
+	 * @EventAttribute
+	 * @param TestObservableObject $object
+	 * @param PrivateEventArgs $args
+	 */
+	private function TheTestEventListenerCustomEventArgs(TestObservableObject $object, PrivateEventArgs $args)
+	{
+		$this->customEventArgs = $args;
+	}
+
+}
+
+class PrivateEventArgs extends EventArguments
+{
+
+	public static $classname = __CLASS__;
+	public $MyValue1 = 0;
+
+	function __construct($MyValue1)
+	{
+		$this->MyValue1 = $MyValue1;
 	}
 
 }

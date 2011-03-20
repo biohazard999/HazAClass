@@ -35,9 +35,6 @@ class ReflectionPropertyTest extends \PHPUnit_Framework_TestCase
 		$this->object = null;
 	}
 
-	/**
-	 * @todo Implement testHasAttribute().
-	 */
 	public function testHasAttributeNormal()
 	{
 		$this->assertTrue($this->object->HasAttribute(TestAttribute::$classname));

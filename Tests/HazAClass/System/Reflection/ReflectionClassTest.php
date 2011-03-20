@@ -34,10 +34,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 		$this->object = null;
 	}
 
-
-	/**
-	 * @todo Implement testHasAttribute().
-	 */
 	public function testHasAttributeNormal()
 	{
 		$this->assertTrue($this->object->GetType()->GetReflectionClass()->HasAttribute(TestAttribute::$classname));
@@ -135,9 +131,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf(IList::IList, $properties);
 	}
 
-	/**
-	 * @todo Implement testGetInterfaces().
-	 */
 	public function testGetInterfaces()
 	{
 		$interfaces = $this->object->GetType()->GetReflectionClass()->getInterfaces();
@@ -145,9 +138,6 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(2, $interfaces->count());
 	}
 
-	/**
-	 * @todo Implement testGetParentClass().
-	 */
 	public function testGetParentClass()
 	{
 		$this->assertInstanceOf(ReflectionClass::$classname, $this->object->GetType()->GetReflectionClass()->getParentClass());

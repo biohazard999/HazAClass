@@ -21,9 +21,6 @@ class EnumTest extends \PHPUnit_Framework_TestCase
 		$this->assertNotSame(TestEnum::MyValue1(), TestEnum::MyValue2());
 	}
 
-	/**
-	 * @todo Implement testGetValue().
-	 */
 	public function testGetValue()
 	{
 		$this->assertEquals('1', TestEnum::MyValue1()->getValue());
@@ -32,9 +29,6 @@ class EnumTest extends \PHPUnit_Framework_TestCase
 
 	}
 
-	/**
-	 * @todo Implement test__toString().
-	 */
 	public function testToString()
 	{
 		$this->assertEquals('1', (string) TestEnum::MyValue1());

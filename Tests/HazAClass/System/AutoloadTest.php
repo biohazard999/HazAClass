@@ -48,9 +48,6 @@ class AutoloadTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(class_exists(\CustomNameSpace\AutoloadTestClass::$classname), false);
 	}
 
-	/**
-	 * @todo Implement testRegisterAutoloader().
-	 */
 	public function testRegisterAutoloader()
 	{
 		$classname = '\\'.self::MAINNAMESPACE.'\\NeverloadedClass';
