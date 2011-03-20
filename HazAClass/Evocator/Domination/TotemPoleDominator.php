@@ -16,7 +16,7 @@
  * $HeadURL:: http://jackonrock.dyndns.org:81/svn/HazAClassLite/branches/HazAClass53/framework/controls/doc#$
  ***********************************************************************************************************/
 
-namespace HazAClass;
+namespace HazAClass\Evocator\Domination;
 
 class TotemPoleDominator
 {

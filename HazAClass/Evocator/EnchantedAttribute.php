@@ -19,7 +19,7 @@
 
 namespace HazAClass\Evocator;
 
-use HazAClass\core\attributes\Attribute;
+use HazAClass\System\Attribute;
 
 class EnchantedAttribute extends Attribute
 {
@@ -32,7 +32,7 @@ class EnchantedAttribute extends Attribute
 		$this->enchantedMethod = $enchantedMethod;
 	}
 
-	public function getEnchantedMethod()
+	public function GetEnchantedMethod()
 	{
 		return $this->enchantedMethod;
 	}

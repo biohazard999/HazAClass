@@ -17,7 +17,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/domination/TemporalDomin#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\Evocator\domination;
+namespace HazAClass\Evocator\Domination;
 
 /**
  * This Dominator provides a Transient lifetime of objects.
@@ -28,7 +28,7 @@ class TemporalDominator extends AbstractDominator
 
 	public static $classname = __CLASS__;
 
-	public function dominateCreature()
+	public function DominateCreature()
 	{
 		return $this->getSummoner()->summon();
 	}

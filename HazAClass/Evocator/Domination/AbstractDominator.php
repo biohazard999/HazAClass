@@ -1,5 +1,4 @@
 <?php
-
 /** * *******************************************************************************************************$
  * $Id:: AbstractDominator.php 23 2010-11-09 16:49:23Z manuelgrundner                                       $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
@@ -17,51 +16,56 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/domination/AbstractDomin#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\Evocator\domination;
+namespace HazAClass\Evocator\Domination;
 
 use HazAClass\Evocator\Evocator;
 use HazAClass\Evocator\CreatureSummoner;
+use HazAClass\System\Type;
+use HazAClass\System\Object;
 
-abstract class AbstractDominator implements iDominator
+abstract class AbstractDominator implements IDominator
 {
 
 	public static $classname = __CLASS__;
+	/**
+	 * @var Evocator
+	 */
 	protected $evocator;
+	/**
+	 * @var Object
+	 */
 	protected $creature;
-	protected $creatureName;
-	protected $creatureClassname;
+	/**
+	 * @var Type
+	 */
+	protected $creatureType;
 	private $summoner;
 
-	public function setCreature($creatureName, $creature)
+	public function SetCreatureType(Type $creatureType)
 	{
-		$this->setCreatureName($creatureName);
-		$this->creature = $creature;
+		$this->creatureType = $creatureType;
 	}
 
-	public function setCreatureClassname($creatureClassname)
-	{
-		$this->creatureClassname = $creatureClassname;
-	}
-
-	public function setCreatureName($creatureName)
-	{
-		$this->creatureName = $creatureName;
-	}
-
-	public function setEvocator(Evocator $evocator)
+	public function SetEvocator(Evocator $evocator)
 	{
 		$this->evocator = $evocator;
+	}
+
+	public function SetCreature(Object $creature)
+	{
+		$this->creature = $creature;
 	}
 
 	/**
 	 * @return CreatureSummoner
 	 */
-	public function getSummoner()
+	protected function GetSummoner()
 	{
 		if($this->summoner === null)
-			$this->summoner = new CreatureSummoner($this->creatureClassname, $this->evocator);
+			$this->summoner = new CreatureSummoner($this->creatureType, $this->evocator);
 		return $this->summoner;
 	}
+
 }
 
 ?>

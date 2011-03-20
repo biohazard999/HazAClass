@@ -16,7 +16,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/domination/OverallDomina#$
  ***********************************************************************************************************/
 
-namespace HazAClass\Evocator\domination;
+namespace HazAClass\Evocator\Domination;
 
 if(session_id() === '')
 	session_start();

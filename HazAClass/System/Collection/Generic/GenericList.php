@@ -40,6 +40,8 @@ class GenericList extends Object implements IList
 
 	public function IsElementMatching($element)
 	{
+		if($element instanceof Object)
+			return $element->GetType()->IsTypeOf($this->typeofElements);
 		return typeof(get_class($element))->IsTypeOf($this->typeofElements);
 	}
 
@@ -114,6 +116,7 @@ class GenericList extends Object implements IList
 
 	public function InsertElement($index, $element)
 	{
+		$this->GuardElementIsTypeOfGeneric($element);
 		return $this->innerList->InsertElement($index, $element);
 	}
 

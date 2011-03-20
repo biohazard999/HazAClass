@@ -17,7 +17,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/domination/EvocatorDomin#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\Evocator\domination;
+namespace HazAClass\Evocator\Domination;
 
 
 /**
@@ -29,7 +29,7 @@ class EvocatorDominator extends AbstractDominator
 
 	public static $classname = __CLASS__;
 
-	public function dominateCreature()
+	public function DominateCreature()
 	{
 		if($this->creature === null)
 			$this->creature = $this->getSummoner()->summon();

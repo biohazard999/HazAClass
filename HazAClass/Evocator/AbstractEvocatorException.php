@@ -18,9 +18,7 @@
 
 namespace HazAClass\Evocator;
 
-use HazAClass\core\exceptions\AbstractHazAClassException;
-
-abstract class AbstractEvocatorException extends AbstractHazAClassException
+abstract class AbstractEvocatorException extends \Exception
 {
 	public static $classname = __CLASS__;
 

@@ -19,7 +19,7 @@
 
 namespace HazAClass\Evocator;
 
-use HazAClass\core\attributes\Attribute;
+use HazAClass\System\Attribute;
 
 class RevivedAttribute extends Attribute
 {
@@ -32,7 +32,7 @@ class RevivedAttribute extends Attribute
 		$this->revidedMethod = $revidedMethod;
 	}
 
-	public function getRevidedMethod()
+	public function GetRevidedMethod()
 	{
 		return $this->revidedMethod;
 	}

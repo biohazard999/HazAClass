@@ -28,11 +28,15 @@ class ReflectionProperty extends \ReflectionProperty
 
 	public function HasAttribute($name)
 	{
+		if($name instanceof Type)
+			$name = $name->GetFullName();
 		return $this->getAttributes()->IndexExists($name);
 	}
 
 	public function GetAttribute($name)
 	{
+		if($name instanceof Type)
+			$name = $name->GetFullName();
 		return $this->getAttributes()->offsetGet($name);
 	}
 

@@ -21,6 +21,7 @@ namespace HazAClass\System\Reflection;
 use HazAClass\System\Reflection\Usings\UsingsParser;
 use HazAClass\System\Reflection\Attributes\AttributeBuilder;
 use HazAClass\System\Collection\Generic\GenericList;
+use HazAClass\System\Type;
 
 class ReflectionClass extends \ReflectionClass
 {
@@ -31,11 +32,15 @@ class ReflectionClass extends \ReflectionClass
 
 	public function HasAttribute($name)
 	{
+		if($name instanceof Type)
+			$name = $name->GetFullName();
 		return $this->GetAttributes()->IndexExists($name);
 	}
 
 	public function GetAttribute($name)
 	{
+		if($name instanceof Type)
+			$name = $name->GetFullName();
 		return $this->GetAttributes()->offsetGet($name);
 	}
 
@@ -52,6 +57,9 @@ class ReflectionClass extends \ReflectionClass
 		return $this->attributes;
 	}
 
+	/**
+	 * @return ReflectionMethod
+	 */
 	public function getConstructor()
 	{
 		return $this->createOverrideReflectionMethod(parent::getConstructor());
@@ -144,6 +152,7 @@ class ReflectionClass extends \ReflectionClass
 
 		return $this->usings;
 	}
+
 }
 
 ?>

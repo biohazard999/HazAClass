@@ -59,6 +59,8 @@ final class Type extends Object
 	 */
 	public function ImplementsInterface($interfaceName)
 	{
+		if($interfaceName instanceof Type)
+			$interfaceName = $interfaceName->GetFullName();
 		return $this->GetReflectionClass()->implementsInterface($interfaceName);
 	}
 
@@ -80,6 +82,21 @@ final class Type extends Object
 	public function IsSubClass($classname)
 	{
 		return $this->GetReflectionClass()->isSubclassOf($classname);
+	}
+
+	public function IsInterface()
+	{
+		return $this->GetReflectionClass()->isInterface();
+	}
+
+	public function IsClass()
+	{
+		return!$this->IsInterface();
+	}
+
+	public function IsInstantiable()
+	{
+		return $this->GetReflectionClass()->isInstantiable();
 	}
 
 	/**
@@ -175,6 +192,11 @@ final class Type extends Object
 	public static function IsClassnameFullQualified($classname)
 	{
 		return String::Instance($classname)->StartsWith('\\');
+	}
+
+	public function ToString()
+	{
+		return $this->GetFullName();
 	}
 
 }

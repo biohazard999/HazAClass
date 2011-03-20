@@ -27,7 +27,7 @@ final class TypeManager
 
 	private function __construct()
 	{
-
+		
 	}
 
 	private function __clone()
@@ -47,6 +47,9 @@ final class TypeManager
 
 	public function GetType($classname)
 	{
+		if($classname instanceof Type)
+			$classname = $classname->GetFullName();
+		
 		if(!array_key_exists($classname, $this->types))
 			$this->types[$classname] = new Type($classname);
 

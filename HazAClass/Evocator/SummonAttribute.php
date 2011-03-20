@@ -1,5 +1,4 @@
 <?php
-
 /** * *******************************************************************************************************$
  * $Id:: SummonAttribute.php 15 2010-11-08 00:48:00Z manuelgrundner                                         $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
@@ -19,29 +18,45 @@
 
 namespace HazAClass\Evocator;
 
-use HazAClass\core\attributes\Attribute;
+use HazAClass\System\Attribute;
+use HazAClass\System\Type;
 
 class SummonAttribute extends Attribute
 {
 
 	public static $classname = __CLASS__;
-	private $summon;
-	private $optional;
+	private $spellType;
+	public $Name;
+	public $Optional;
 
-	public function __construct($summon = true, $optional = false)
+	public function __construct($spellType)
 	{
-		$this->summon = $summon;
-		$this->optional = $optional;
+		if(!($spellType instanceof Type))
+			$spellType = typeof($spellType);
+		$this->spellType = $spellType;
 	}
 
-	public function doSummon()
+	/**
+	 * @return Type
+	 */
+	public function GetSpellType()
 	{
-		return $this->summon;
+		return $this->spellType;
 	}
 
-	public function isOptional()
+	public function GetName()
 	{
-		return $this->optional;
+		return $this->Name;
+	}
+
+	public function IsNamedCreature()
+	{
+		return $this->Name !== null;
+	}
+
+	public function IsOptional()
+	{
+		return $this->Optional;
 	}
 
 }

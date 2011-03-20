@@ -1,5 +1,4 @@
 <?php
-
 /** * *******************************************************************************************************$
  * $Id:: Evocator.php 48 2010-11-28 09:03:29Z manuelgrundner                                                $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
@@ -19,70 +18,61 @@
 
 namespace HazAClass\Evocator;
 
-use HazAClass\core\collections\Map;
-use HazAClass\Evocator\domination\iDominator;
-use HazAClass\utils\ReflectionUtil;
-use HazAClass\utils\StringUtil;
-use HazAClass\Evocator\domination\TemporalDominator;
-use HazAClass\Evocator\domination\EvocatorDominator;
+use HazAClass\Evocator\domination\IDominator;
+use HazAClass\Evocator\Domination\TemporalDominator;
+use HazAClass\Evocator\Domination\EvocatorDominator;
+use HazAClass\System\Collection\Generic\GenericList;
+use HazAClass\System\Type;
+use HazAClass\System\Object;
+use HazAClass\System\String;
 
-class Evocator
+class Evocator extends Object
 {
 
 	public static $classname = __CLASS__;
 	/**
-	 * @var Collection
+	 * @var GenericList
 	 */
 	private $noviceEvocators;
 	/**
-	 * @var Evocator
-	 */
-	private $masterEvocator;
-	/**
-	 * @var Map
+	 * @var GenericList
 	 */
 	private $spells;
-	/**
-	 * @var string
-	 */
-	private $identity;
 
-	public function __construct(Evocator $parentEvocator = null)
+	public function __construct()
 	{
-		$this->masterEvocator = $parentEvocator;
-		$this->spells = new Map(Spell::$classname);
+		$this->spells = new GenericList(Spell::$classname);
 	}
 
 	/**
-	 *
-	 * @param string $classnameOrInterface
-	 * @return mixed
+	 * @param string $type
+	 * @return Object
 	 */
-	public function summon($classnameOrInterface, $name = null)
+	public function Summon(Type $type, $name = null)
 	{
-		if($this->hasSpell($classnameOrInterface, $name))
-			return $this->getSpell($classnameOrInterface, $name)->summonCreature();
-			
-		return $this->autoSummon($classnameOrInterface);
+		if($this->HasSpell($type, $name))
+			return $this->GetSpell($type, $name)->SummonCreature();
+
+		return $this->AutoSummon($type);
 	}
 
 	/**
-	 * @param string $classnameOrInterface
+	 * @param string $type
 	 * @param string $name
 	 * @return Spell
 	 */
-	private function getSpell($classnameOrInterface, $name)
+	private function GetSpell(Type $type, $name)
 	{
-		return $this->spells[$this->createSpellName($classnameOrInterface, $name)];
+		return $this->spells[$this->createSpellName($type, $name)];
 	}
 
-	private function autoSummon($classname)
+	private function AutoSummon(Type $type)
 	{
-		if(interface_exists($classname))
+		if($type->IsInterface())
 			throw new AutoSummonException(AutoSummonException::INTERFACE_COULD_NOT_BE_AUTO_SUMMOND);
 
-		$summoner = new CreatureSummoner($classname, $this);
-		return $summoner->summon();
+		$summoner = new CreatureSummoner($type, $this);
+		return $summoner->Summon();
 	}
 
 	/**
@@ -90,164 +80,119 @@ class Evocator
 	 * @param string $creature
 	 * @return mixed
 	 */
-	public function enchant($creature)
+	public function Enchant(Object $creature)
 	{
-		if(!is_object($creature))
-			throw new SummonException(SummonException::COULD_NOT_ENCHANT_CREATUE);
-		$summoner = new CreatureSummoner(get_class($creature), $this);
-		return $summoner->enchant($creature);
+		$summoner = new CreatureSummoner($creature->GetType(), $this);
+		return $summoner->Enchant($creature);
 	}
 
-	public function hasSpell($classnameOrInterface, $name = null)
+	public function HasSpell(Type $type, $name = null)
 	{
-		return $this->spells->hasIndex($this->createSpellName($classnameOrInterface, $name));
+		return $this->spells->IndexExists($this->createSpellName($type, $name));
 	}
 
 	/**
-	 * @param string $classnameOrInterface
-	 * @param string $type
-	 * @param iLifetimeManager $dominator
+	 * @param Type $spellType
+	 * @param Type $creatureType
 	 * @param string $name
+	 * @param IDominator $dominator
 	 */
-	public function learnSpell($classnameOrInterface, $type, $name = null, iDominator $dominator = null)
+	public function LearnSpell(Type $spellType, Type $creatureType, $name = null, IDominator $dominator = null)
 	{
-		$this->checkClassnameOrInterface($classnameOrInterface);
-		$this->checkType($classnameOrInterface, $type);
+		$this->checkType($spellType, $creatureType);
 
 		if($dominator === null)
 			$dominator = new TemporalDominator();
 
 
-		$spellName = $this->createSpellName($classnameOrInterface, $name);
-		$dominator->setEvocator($this);
+		$spellName = $this->createSpellName($spellType, $name);
+		$dominator->SetEvocator($this);
 
 
-		$spell = new Spell($classnameOrInterface, $type, $dominator, $spellName);
+		$spell = new Spell($spellType, $creatureType, $dominator, $spellName);
 		$this->spells[$spellName] = $spell;
 
 		return $this;
 	}
 
-	private function checkClassnameOrInterface($classnameOrInterface)
+	private function checkType(Type $type, Type $creatureType)
 	{
-		if(!is_string($classnameOrInterface) || !ReflectionUtil::classOrInterfaceExists($classnameOrInterface))
-			throw new LearnSpellException('Given $classnameOrInterface is not a string or doesn\'t exist, are you missing a string cast?');
+		if($type->IsInterface() && !$creatureType->ImplementsInterface($type))
+			throw new LearnSpellException('Given $creatureType ('.$creatureType.') is not instance of $type ('.$type.'), are you missing the interface implementation?');
+
+		if($type->IsClass() && !$creatureType->IsTypeOf($type))
+			throw new LearnSpellException('Given $creatureType ('.$creatureType.') is not instance of $type ('.$type.'), are you missing the interface implementation?');
 	}
 
-	private function checkType($classnameOrInterface, $type)
+	public function PossessCreature(Type $type, Object $creature, $name = null, IDominator $dominator = null)
 	{
-		if(!is_string($type) || !ReflectionUtil::classOrInterfaceExists($type))
-			throw new LearnSpellException('Given $type ('.print_r($type, true).') is not a string or doesn\'t exist, are you missing a string cast? \n If you want to register an object instance use the possessCreature method');
-
-
-		if(!ReflectionUtil::implementsInterface($type, $classnameOrInterface))
-			throw new LearnSpellException('Given $type ('.print_r($type, true).') is not instance of $classnameOrInterface ('.$classnameOrInterface.'), are you missing the interface implementation?');
-	}
-
-	private function checkCreature($classnameOrInterface, $creature)
-	{
-		if(!is_object($creature))
-			throw new PossessCreatureException('Given $creature is not an object');
-
-		if(interface_exists($classnameOrInterface) && !ReflectionUtil::implementsInterface($creature, $classnameOrInterface))
-			throw new PossessCreatureException('Given $creature is not implementing interface '.$classnameOrInterface);
-
-		if(interface_exists($classnameOrInterface) && !($creature instanceof $classnameOrInterface))
-			throw new PossessCreatureException('Given $creature is not type of '.$classnameOrInterface);
-	}
-
-	public function possessCreature($classnameOrInterface, $creature, $name = null, iDominator $dominator = null)
-	{
-		$this->checkClassnameOrInterface($classnameOrInterface);
-		$this->checkCreature($classnameOrInterface, $creature);
+		$this->checkType($type, $creature->GetType());
 
 		if($dominator === null)
 			$dominator = new EvocatorDominator();
 
-		$spellName = $this->createSpellName($classnameOrInterface, $name);
+		$spellName = $this->createSpellName($type, $name);
 		$dominator->setEvocator($this);
-		$dominator->setCreature($spellName, $creature);
+		$dominator->setCreature($creature);
 
-		$spell = new Spell($classnameOrInterface, get_class($creature), $dominator, $spellName);
-		$this->spells[$spellName] = $spell;
+		$this->spells[$spellName] = new Spell($type, $creature->GetType(), $dominator, $spellName);
 		return $this;
 	}
 
-	public function forgetSpell($classnameOrInterface, $name = null)
+	public function ForgetSpell(Type $type, $name = null)
 	{
-		$this->spells->removeIndex($this->createSpellName($classnameOrInterface, $name));
+		$this->spells->RemoveAt($this->createSpellName($type, $name));
 	}
 
-	public function annihilateSpell($classnameOrInterface, $name = null)
+	public function AnnihilateSpell(Type $type, $name = null)
 	{
-		$this->forgetSpell($classnameOrInterface, $name);
+		$this->ForgetSpell($type, $name);
 		foreach($this->noviceEvocators as $novice) /* @var $novice Evocator */
-			$novice->forgetSpell($classnameOrInterface, $name);
+			$novice->ForgetSpell($type, $name);
 	}
 
 	/**
-	 * @param string $classnameOrInterface
+	 * @param string $type
 	 * @return Map
 	 */
-	public function summonAll($classnameOrInterface)
+	public function SummonAll(Type $type)
 	{
-		$creatures = new Map($classnameOrInterface);
+		$creatures = new GenericList($type);
 		foreach($this->spells as $name => $spell)
 		{
-			if(StringUtil::startsWith($name, $classnameOrInterface.'('))
+			if(String::Instance($name)->StartsWith($type.'('))
 			{
-				$shortName = StringUtil::remove($name, $classnameOrInterface);
-				$shortName = StringUtil::remove($shortName, '(');
-				$shortName = StringUtil::remove($shortName, ')');
-				$creatures[$shortName] = $this->summon($classnameOrInterface, $shortName);
+				$str = String::Instance($name)
+					->Remove($type)
+					->Remove('(')
+					->Remove(')');
+
+				$creatures[$str->ToString()] = $this->summon($type, $str->ToString());
 			}
 		}
 		return $creatures;
 	}
 
-	private function createSpellName($classnameOrInterface, $name = null)
+	private function createSpellName(Type $type, $name = null)
 	{
 		if($name !== null)
-			return $classnameOrInterface.'('.$name.')';
+			return $type.'('.$name.')';
 
-		return $classnameOrInterface;
+		return $type->ToString();
 	}
 
 	/**
 	 * @return Evocator
 	 */
-	public function createNoviceEvocator()
+	public function CreateNoviceEvocator()
 	{
-		$noviceEvocator = new static($this);
+		$noviceEvocator = new static(); /* @var $noviceEvocator Evocator */
 		$this->noviceEvocators[] = $noviceEvocator;
+		foreach($this->spells as $spell) /* @var $spell Spell */
+			$noviceEvocator->LearnSpell($spell->GetType(), $spell->GetCreatureType(), $spell->GetName(), $spell->GetDominator());
+
 		return $noviceEvocator;
 	}
-
-	public function getMasterEvocator()
-	{
-		return $this->masterEvocator;
-	}
-
-	public function isGrandEvocator()
-	{
-		return $this->masterEvocator === null;
-	}
-
-	public function getGrandEvocator()
-	{
-		if($this->isGrandEvocator())
-			return $this;
-		return $this->getMasterEvocator()->getGrandEvocator();
-	}
-
-
-	public function getIdentity()
-	{
-		if($this->identity === null)
-			$this->identity = String::Instance()->UUID()->ToString();
-		 return $this->identity;
-	}
-
 
 }
 

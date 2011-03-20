@@ -17,27 +17,22 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/domination/iDominator.ph#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\Evocator\domination;
+namespace HazAClass\Evocator\Domination;
 
 use HazAClass\Evocator\Evocator;
+use HazAClass\System\Type;
+use HazAClass\System\Object;
 
-interface iDominator
+interface IDominator
 {
 	/**
 	 * @return mixed
 	 */
-	public function dominateCreature();
+	public function DominateCreature();
 
-	public function setCreature($creatureName, $creature);
-
-	public function setCreatureName($creatureName);
-
-	public function setCreatureClassname($creatureClassname);
-
-	public function setEvocator(Evocator $evocator);
-
-	/**
-	 * @return CreatureSummoner
-	 */
-	public function getSummoner();
+	public function SetCreatureType(Type $creatureType);
+	
+	public function SetEvocator(Evocator $evocator);
+	
+	public function SetCreature(Object $creature);
 }

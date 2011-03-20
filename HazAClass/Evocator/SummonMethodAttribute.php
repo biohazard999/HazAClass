@@ -1,7 +1,6 @@
 <?php
-
 /** * *******************************************************************************************************$
- * $Id:: SummonTypeAttribute.php 15 2010-11-08 00:48:00Z manuelgrundner                                     $
+ * $Id:: DocumentHeadRenderer.php 199 2009-09-30 19:57:12Z manuelgrundner                                   $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
  * @copyright Copyright (c) 2009, Manuel Grundner & Ren� Grundner                                           $
  *                                                                                                          $
@@ -11,31 +10,20 @@
  * @subpackage                                                                                              $
  *                                                                                                          $
  * *****************************************Subversion Information********************************************
- * $LastChangedDate:: 2010-11-08 01:48:00 +0100 (Mo, 08 Nov 2010)                                           $
- * $LastChangedRevision:: 15                                                                                $
+ * $LastChangedDate:: 2009-09-30 21:57:12 +0200 (Mi, 30 Sep 2009)                                           $
+ * $LastChangedRevision:: 199                                                                               $
  * $LastChangedBy:: manuelgrundner                                                                          $
- * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/SummonTypeAttribute.php  $
+ * $HeadURL:: http://jackonrock.dyndns.org:81/svn/HazAClassLite/branches/HazAClass53/framework/controls/doc#$
  * ********************************************************************************************************* */
 
 namespace HazAClass\Evocator;
 
-use HazAClass\core\attributes\Attribute;
+use HazAClass\System\Attribute;
 
-class SummonTypeAttribute extends Attribute
+class SummonMethodAttribute extends Attribute
 {
 
 	public static $classname = __CLASS__;
-	private $summonType;
-
-	public function __construct($summonType)
-	{
-		$this->summonType = $summonType;
-	}
-
-	public function getSummonType()
-	{
-		return $this->summonType;
-	}
 
 }
 

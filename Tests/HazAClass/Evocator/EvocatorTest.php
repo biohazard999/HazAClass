@@ -2,6 +2,10 @@
 
 namespace HazAClass\Evocator;
 
+use HazAClass\System\Type;
+use HazAClass\System\Object;
+use HazAClass\Evocator\Domination\EvocatorDominator;
+
 require_once dirname(__FILE__).'/../../../HazAClass/Evocator/Evocator.php';
 
 /**
@@ -30,42 +34,41 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 		$this->evocator = null;
 	}
 
-
 	// <editor-fold defaultstate="collapsed" desc=" Normal Summon ">
 	public function testSummonNormalClassInterfaceNotImplemented()
 	{
 		$this->setExpectedException(LearnSpellException::$classname);
-		$this->evocator->learnSpell(iTest::iTest, TestClassWithoutITest::$classname);
+		$this->evocator->learnSpell(typeof(iTest::iTest), typeof(TestClassWithoutITest::$classname));
 	}
 
 	public function testSummonNormalClass()
 	{
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname);
-		$this->assertType(NormalTestClass::$classname, $this->evocator->summon(iTest::iTest));
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(NormalTestClass::$classname));
+		$this->assertType(NormalTestClass::$classname, $this->evocator->Summon(typeof(iTest::iTest)));
 	}
 
 	public function testAutoSummonClass()
 	{
-		$this->assertType(NormalTestClass::$classname, $this->evocator->summon(NormalTestClass::$classname));
+		$this->assertType(NormalTestClass::$classname, $this->evocator->summon(typeof(NormalTestClass::$classname)));
 	}
 
 	public function testAutoSummonInterfaceClass()
 	{
-		$this->evocator->learnSpell(iTestDependency::iTestDependency, InterfaceTestDependency::$classname);
+		$this->evocator->learnSpell(typeof(iTestDependency::iTestDependency), typeof(InterfaceTestDependency::$classname));
 
-		$this->assertType(iTest::iTest, $this->evocator->summon(InterfaceTestClass::$classname));
+		$this->assertType(iTest::iTest, $this->evocator->Summon(typeof(InterfaceTestClass::$classname)));
 	}
 
 	public function testFailAutoSummonInterfaceClass()
 	{
 		$this->setExpectedException(SummonException::$classname);
-		$this->evocator->summon(InterfaceTestClass::$classname);
+		$this->evocator->Summon(typeof(InterfaceTestClass::$classname));
 	}
 
 	public function testAutoSummonClassTypeMapException()
 	{
 		$this->setExpectedException(AutoSummonException::$classname, AutoSummonException::INTERFACE_COULD_NOT_BE_AUTO_SUMMOND);
-		$this->evocator->summon(iTest::iTest);
+		$this->evocator->Summon(typeof(iTest::iTest));
 	}
 
 	/**
@@ -73,38 +76,38 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreateNoviceEvocator()
 	{
-		$this->assertType(Evocator::$classname, $this->evocator->createNoviceEvocator());
+		$this->assertType(Evocator::$classname, $this->evocator->CreateNoviceEvocator());
 	}
 
 	public function testScalarFailSummon()
 	{
 		$this->setExpectedException(SummonException::$classname);
-		$this->evocator->summon(ScalarParamTestClass::$classname);
+		$this->evocator->Summon(typeof(ScalarParamTestClass::$classname));
 	}
 
 	public function testArrayFailSummon()
 	{
 		$this->setExpectedException(SummonException::$classname);
-		$this->evocator->summon(ArrayParamTestClass::$classname);
+		$this->evocator->Summon(typeof(ArrayParamTestClass::$classname));
 	}
 
 	public function testArrayOptionalSuccessSummon()
 	{
-		$this->assertType(ArrayOptionalParamTestClass::$classname, $this->evocator->summon(ArrayOptionalParamTestClass::$classname));
+		$this->assertType(ArrayOptionalParamTestClass::$classname, $this->evocator->Summon(typeof(ArrayOptionalParamTestClass::$classname)));
 	}
 
 	public function testNullableInjectionSuccess()
 	{
-		$this->evocator->learnSpell(iTestDependency::iTestDependency, InterfaceTestDependency::$classname);
+		$this->evocator->LearnSpell(typeof(iTestDependency::iTestDependency), typeof(InterfaceTestDependency::$classname));
 
-		$testObject = $this->evocator->summon(ClassNullableParamTestClass::$classname); /* @var $testObject ClassNullableParamTestClass */
+		$testObject = $this->evocator->Summon(typeof(ClassNullableParamTestClass::$classname)); /* @var $testObject ClassNullableParamTestClass */
 
 		$this->assertType(iTestDependency::iTestDependency, $testObject->getTestDependency());
 	}
 
 	public function testNullableInjectionNull()
 	{
-		$testObject = $this->evocator->summon(ClassNullableParamTestClass::$classname); /* @var $testObject ClassNullableParamTestClass */
+		$testObject = $this->evocator->Summon(typeof(ClassNullableParamTestClass::$classname)); /* @var $testObject ClassNullableParamTestClass */
 		$this->assertEquals(null, $testObject->getTestDependency());
 	}
 
@@ -114,24 +117,24 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 	{
 		$object = new TestClassWithoutITest;
 
-		$this->evocator->possessCreature(TestClassWithoutITest::$classname, $object);
-		$this->assertEquals($object, $this->evocator->summon(TestClassWithoutITest::$classname));
+		$this->evocator->PossessCreature(typeof(TestClassWithoutITest::$classname), $object);
+		$this->assertEquals($object, $this->evocator->Summon(typeof(TestClassWithoutITest::$classname)));
 	}
 
 	public function testPossessCreatureDefaultLifetimeManager()
 	{
-		$object = $this->evocator->summon(NormalTestClass::$classname);
+		$object = $this->evocator->Summon(typeof(NormalTestClass::$classname));
 
-		$this->evocator->possessCreature(NormalTestClass::$classname, $object);
-		$this->assertEquals($object, $this->evocator->summon(NormalTestClass::$classname));
+		$this->evocator->PossessCreature(typeof(NormalTestClass::$classname), $object);
+		$this->assertEquals($object, $this->evocator->Summon(typeof(NormalTestClass::$classname)));
 	}
 
 	public function testPossessCreatureDefaultLifetimeManagerNormalCreation()
 	{
 		$object = new NormalTestClass(new NormalTestDependency());
 
-		$this->evocator->possessCreature(NormalTestClass::$classname, $object);
-		$this->assertEquals($object, $this->evocator->summon(NormalTestClass::$classname));
+		$this->evocator->PossessCreature(typeof(NormalTestClass::$classname), $object);
+		$this->assertEquals($object, $this->evocator->Summon(typeof(NormalTestClass::$classname)));
 	}
 
 	// </editor-fold>
@@ -139,61 +142,56 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 
 	public function testPrivateMethodSummon()
 	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$this->evocator->summon(PrivateMethodClass::$classname);
+		$object = $this->evocator->Summon(typeof(PrivateMethodClass::$classname)) /* @var $object PrivateMethodClass */;
+		$this->assertTrue($object->isSummoned());
 	}
 
 	public function testProtectedMethodSummon()
 	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$this->evocator->summon(ProtectedMethodClass::$classname);
+		$object = $this->evocator->Summon(typeof(ProtectedMethodClass::$classname));
+		$this->assertTrue($object->isSummoned());
 	}
 
 	public function testEmptyMethodSummon()
 	{
-		$this->assertTrue($this->evocator->summon(EmptyMethodSummon::$classname)->isSummoned());
+		$this->assertTrue($this->evocator->Summon(typeof(EmptyMethodSummon::$classname))->isSummoned());
 	}
 
 	public function testNormalMethodSummon()
 	{
-		$this->assertType(NormalTestDependency::$classname, $this->evocator->summon(NormalMethodSummon::$classname)->getDependency());
-	}
-
-	public function testNoMethodSummon()
-	{
-		$this->assertFalse($this->evocator->summon(EmptyMethodNoSummon::$classname)->isSummoned());
+		$this->assertType(NormalTestDependency::$classname, $this->evocator->Summon(typeof(NormalMethodSummon::$classname))->getDependency());
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc=" Property Summon ">
 	public function testNormalPropertySummon()
 	{
-		$prop = $this->evocator->summon(NormalPropertyClass::$classname); /* @var $prop NormalPropertyClass */
+		$prop = $this->evocator->Summon(typeof(NormalPropertyClass::$classname)); /* @var $prop NormalPropertyClass */
 		$this->assertType(NormalTestDependency::$classname, $prop->property);
 	}
 
 	public function testPrivatePropertySummon()
 	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$this->evocator->summon(PrivatePropertyClass::$classname);
+		$prop = $this->evocator->Summon(typeof(PrivatePropertyClass::$classname));
+		$this->assertType(NormalTestDependency::$classname, $prop->getProperty());
 	}
 
 	public function testProtectedPropertySummon()
 	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$this->evocator->summon(ProtectedPropertyClass::$classname);
+		$prop = $this->evocator->Summon(typeof(ProtectedPropertyClass::$classname));
+		$this->assertType(NormalTestDependency::$classname, $prop->getProperty());
 	}
 
 	public function testOptionalFailPropertySummon()
 	{
-		$prop = $this->evocator->summon(NormalOptionalPropertyClass::$classname); /* @var $prop iTestDependency */
+		$prop = $this->evocator->Summon(typeof(NormalOptionalPropertyClass::$classname));
 		$this->assertEquals(null, $prop->property);
 	}
 
 	public function testOptionalSuccessPropertySummon()
 	{
-		$this->evocator->learnSpell(iTestDependency::iTestDependency, InterfaceTestDependency::$classname);
-		$prop = $this->evocator->summon(NormalOptionalPropertyClass::$classname); /* @var $prop iTestDependency */
+		$this->evocator->LearnSpell(typeof(iTestDependency::iTestDependency), typeof(InterfaceTestDependency::$classname));
+		$prop = $this->evocator->Summon(typeof(NormalOptionalPropertyClass::$classname)); /* @var $prop iTestDependency */
 		$this->assertType(iTestDependency::iTestDependency, $prop->property);
 	}
 
@@ -201,29 +199,29 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 	// <editor-fold defaultstate="collapsed" desc=" Forget Spells ">
 	public function testForgetSpell()
 	{
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname);
-		$this->assertType(iTest::iTest, $this->evocator->summon(iTest::iTest));
-		$this->evocator->forgetSpell(iTest::iTest);
-		$this->assertFalse($this->evocator->hasSpell(iTest::iTest));
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(NormalTestClass::$classname));
+		$this->assertType(iTest::iTest, $this->evocator->Summon(typeof(iTest::iTest)));
+		$this->evocator->ForgetSpell(typeof(iTest::iTest));
+		$this->assertFalse($this->evocator->HasSpell(typeof(iTest::iTest)));
 	}
 
 	public function testForgetSpellNamed()
 	{
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname, 'testname');
-		$this->assertType(iTest::iTest, $this->evocator->summon(iTest::iTest, 'testname'));
-		$this->evocator->forgetSpell(iTest::iTest, 'testname');
-		$this->assertFalse($this->evocator->hasSpell(iTest::iTest, 'testname'));
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(NormalTestClass::$classname), 'testname');
+		$this->assertType(iTest::iTest, $this->evocator->Summon(typeof(iTest::iTest), 'testname'));
+		$this->evocator->ForgetSpell(typeof(iTest::iTest), 'testname');
+		$this->assertFalse($this->evocator->HasSpell(typeof(iTest::iTest), 'testname'));
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc=" Summon All ">
 	public function testSummonAll()
 	{
-		$this->evocator->learnSpell(iTestDependency::iTestDependency, InterfaceTestDependency::$classname);
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname, 'normal');
-		$this->evocator->learnSpell(iTest::iTest, InterfaceTestClass::$classname, 'interface');
+		$this->evocator->LearnSpell(typeof(iTestDependency::iTestDependency), typeof(InterfaceTestDependency::$classname));
+		$this->evocator->LearnSpell(typeof(iTest::iTest),typeof( NormalTestClass::$classname), 'normal');
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(InterfaceTestClass::$classname), 'interface');
 
-		$creatures = $this->evocator->summonAll(iTest::iTest);
+		$creatures = $this->evocator->SummonAll(typeof(iTest::iTest));
 
 		$this->assertEquals(2, $creatures->count());
 
@@ -233,12 +231,12 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 
 	public function testSummonAllWithUnnamed()
 	{
-		$this->evocator->learnSpell(iTestDependency::iTestDependency, InterfaceTestDependency::$classname);
-		$this->evocator->learnSpell(iTest::iTest, MultipleTestClass::$classname);
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname, 'normal');
-		$this->evocator->learnSpell(iTest::iTest, InterfaceTestClass::$classname, 'interface');
+		$this->evocator->LearnSpell(typeof(iTestDependency::iTestDependency), typeof(InterfaceTestDependency::$classname));
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(MultipleTestClass::$classname));
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(NormalTestClass::$classname), 'normal');
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(InterfaceTestClass::$classname), 'interface');
 
-		$creatures = $this->evocator->summonAll(iTest::iTest);
+		$creatures = $this->evocator->SummonAll(typeof(iTest::iTest));
 
 		$this->assertEquals(2, $creatures->count());
 
@@ -250,88 +248,82 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 	// <editor-fold defaultstate="collapsed" desc=" Dominations ">
 	public function testEvocatorLifeTimeManager()
 	{
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname, null, new EvocatorDominator());
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(NormalTestClass::$classname), null, new EvocatorDominator());
 
-		$object = $this->evocator->summon(iTest::iTest);
+		$object = $this->evocator->Summon(typeof(iTest::iTest));
 
-		$this->assertEquals($object, $this->evocator->summon(iTest::iTest));
+		$this->assertEquals($object, $this->evocator->Summon(typeof(iTest::iTest)));
 	}
 
 	public function testEvocatorLifeTimeManagerNamed()
 	{
-		$this->evocator->learnSpell(iTest::iTest, NormalTestClass::$classname, 'name', new EvocatorDominator());
+		$this->evocator->LearnSpell(typeof(iTest::iTest), typeof(NormalTestClass::$classname), 'name', new EvocatorDominator());
 
-		$object = $this->evocator->summon(iTest::iTest, 'name');
+		$object = $this->evocator->Summon(typeof(iTest::iTest), 'name');
 
-		$this->assertEquals($object, $this->evocator->summon(iTest::iTest, 'name'));
+		$this->assertEquals($object, $this->evocator->Summon(typeof(iTest::iTest), 'name'));
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc=" Revive Creature">
 	public function testDefaultRevived()
 	{
-		$obj = $this->evocator->summon(DefaultRevivedClass::$classname); /* @var $obj DefaultRevivedClass */
+		$obj = $this->evocator->Summon(typeof(DefaultRevivedClass::$classname)); /* @var $obj DefaultRevivedClass */
 		$this->assertTrue($obj->isRevived());
 	}
 
 	public function testRevivedPrivateFail()
 	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$obj = $this->evocator->summon(PrivateRevivedClass::$classname);
+		$obj = $this->evocator->Summon(typeof(PrivateRevivedClass::$classname));
+		$this->assertTrue($obj->isRevived());
 	}
 
 	public function testRevivedProtectedFail()
 	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$obj = $this->evocator->summon(ProtectedRevivedClass::$classname);
+		$obj = $this->evocator->Summon(typeof(ProtectedRevivedClass::$classname));
+		$this->assertTrue($obj->isRevived());
 	}
 
 	public function testCustomRevived()
 	{
-		$obj = $this->evocator->summon(CustomRevivedClass::$classname); /* @var $obj CustomRevivedClass */
+		$obj = $this->evocator->Summon(typeof(CustomRevivedClass::$classname)); /* @var $obj CustomRevivedClass */
 		$this->assertTrue($obj->isRevived());
 	}
 
 	public function testCustomRevivedFail()
 	{
 		$this->setExpectedException(SummonException::$classname);
-		$this->evocator->summon(CustomRevivedFailClass::$classname);
+		$this->evocator->Summon(typeof(CustomRevivedFailClass::$classname));
 	}
 
 	// </editor-fold>
 	// <editor-fold defaultstate="collapsed" desc=" Self Injection ">
 	public function testSelfInjection()
 	{
-		$this->evocator->possessCreature(Evocator::$classname, $this->evocator);
-		$this->assertEquals($this->evocator, $this->evocator->summon(SelfInjection::$classname)->getEvocator());
+		$this->evocator->PossessCreature(typeof(Evocator::$classname), $this->evocator);
+		$this->assertEquals($this->evocator, $this->evocator->Summon(typeof(SelfInjection::$classname))->getEvocator());
 	}
 
 	public function testSelfInjectionMethod()
 	{
-		$this->evocator->possessCreature(Evocator::$classname, $this->evocator);
-		$this->assertEquals($this->evocator, $this->evocator->summon(SelfInjectionMethod::$classname)->getEvocator());
+		$this->evocator->PossessCreature(typeof(Evocator::$classname), $this->evocator);
+		$this->assertEquals($this->evocator, $this->evocator->Summon(typeof(SelfInjectionMethod::$classname))->getEvocator());
 	}
 
 	public function testSelfInjectionProperty()
 	{
-		$this->evocator->possessCreature(Evocator::$classname, $this->evocator);
-		$this->assertEquals($this->evocator, $this->evocator->summon(SelfInjectionProperty::$classname)->getEvocator());
+		$this->evocator->PossessCreature(typeof(Evocator::$classname), $this->evocator);
+		$this->assertEquals($this->evocator, $this->evocator->Summon(typeof(SelfInjectionProperty::$classname))->getEvocator());
 	}
 
 	// </editor-fold>
-
-	public function testEnchantException()
-	{
-		$this->setExpectedException(SummonException::$classname, SummonException::COULD_NOT_ENCHANT_CREATUE);
-		$this->evocator->enchant('Fail');
-	}
 
 	public function testEnchantingMethod()
 	{
 		$creature = new SelfInjectionMethod();
 		$this->assertEquals(null, $creature->getEvocator());
-		$this->evocator->possessCreature(Evocator::$classname, $this->evocator);
-		$this->evocator->enchant($creature);
+		$this->evocator->PossessCreature(typeof(Evocator::$classname), $this->evocator);
+		$this->evocator->Enchant($creature);
 		$this->assertEquals($this->evocator, $creature->getEvocator());
 	}
 
@@ -340,8 +332,8 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 		$creature = new SelfInjectionProperty();
 		$this->assertEquals(null, $creature->getEvocator());
 		$this->assertFalse($creature->isEnchanted());
-		$this->evocator->possessCreature(Evocator::$classname, $this->evocator);
-		$this->evocator->enchant($creature);
+		$this->evocator->PossessCreature(typeof(Evocator::$classname), $this->evocator);
+		$this->evocator->Enchant($creature);
 		$this->assertEquals($this->evocator, $creature->getEvocator());
 		$this->assertTrue($creature->isEnchanted());
 	}
@@ -351,29 +343,14 @@ class EvocatorTest extends \PHPUnit_Framework_TestCase
 		$this->setExpectedException(SummonException::$classname, sprintf(SummonException::ENCHANT_METHOD_DOES_NOT_EXIST, 'enchanted', FailEnchantMethod::$classname));
 		$creature = new FailEnchantMethod();
 
-		$this->evocator->enchant($creature);
+		$this->evocator->Enchant($creature);
 	}
-
-	public function testEnchantingPrivateFail()
-	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$creature = new FailEnchantMethodPrivate();
-		$this->evocator->enchant($creature);
-	}
-
-	public function testEnchantingProtectedFail()
-	{
-		$this->setExpectedException('\\PHPUnit_Framework_Error_Warning');
-		$creature = new FailEnchantMethodProtected();
-		$this->evocator->enchant($creature);
-	}
-
 }
 
 /**
  * @Enchanted
  */
-class FailEnchantMethodPrivate
+class FailEnchantMethodPrivate extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -388,7 +365,7 @@ class FailEnchantMethodPrivate
 /**
  * @Enchanted
  */
-class FailEnchantMethodProtected
+class FailEnchantMethodProtected extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -403,7 +380,7 @@ class FailEnchantMethodProtected
 /**
  * @Enchanted
  */
-class FailEnchantMethod
+class FailEnchantMethod extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -411,7 +388,7 @@ class FailEnchantMethod
 }
 
 // <editor-fold defaultstate="collapsed" desc=" Test Classes ">
-class SelfInjection
+class SelfInjection extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -432,7 +409,7 @@ class SelfInjection
 /**
  * @Enchanted
  */
-class SelfInjectionMethod
+class SelfInjectionMethod extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -440,7 +417,7 @@ class SelfInjectionMethod
 	private $isEnchanted = false;
 
 	/**
-	 * @Summon
+	 * @SummonMethod
 	 */
 	public function method(Evocator $evocator)
 	{
@@ -467,13 +444,12 @@ class SelfInjectionMethod
 /**
  * @Enchanted
  */
-class SelfInjectionProperty
+class SelfInjectionProperty extends Object
 {
 
 	public static $classname = __CLASS__;
 	/**
-	 * @Summon
-	 * @SummonType(Evocator::$classname)
+	 * @Summon(Evocator::$classname)
 	 */
 	public $evocator;
 	private $isEnchanted = false;
@@ -497,7 +473,7 @@ class SelfInjectionProperty
 /**
  * @Revived('notExistingMethod')
  */
-class CustomRevivedFailClass
+class CustomRevivedFailClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -507,7 +483,7 @@ class CustomRevivedFailClass
 /**
  * @Revived
  */
-class DefaultRevivedClass
+class DefaultRevivedClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -528,7 +504,7 @@ class DefaultRevivedClass
 /**
  * @Revived('customRevived')
  */
-class CustomRevivedClass
+class CustomRevivedClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -549,7 +525,7 @@ class CustomRevivedClass
 /**
  * @Revived
  */
-class PrivateRevivedClass
+class PrivateRevivedClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -570,7 +546,7 @@ class PrivateRevivedClass
 /**
  * @Revived
  */
-class ProtectedRevivedClass
+class ProtectedRevivedClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -588,37 +564,34 @@ class ProtectedRevivedClass
 
 }
 
-class NormalPropertyClass
+class NormalPropertyClass extends Object
 {
 
 	public static $classname = __CLASS__;
 	/**
-	 * @Summon
-	 * @SummonType(NormalTestDependency::$classname)
+	 * @Summon(NormalTestDependency::$classname)
 	 * @var NormalTestDependency
 	 */
 	public $property;
 }
 
-class NormalOptionalPropertyClass
+class NormalOptionalPropertyClass extends Object
 {
 
 	public static $classname = __CLASS__;
 	/**
-	 * @Summon(true, true)
-	 * @SummonType(iTestDependency::iTestDependency)
+	 * @Summon(iTestDependency::iTestDependency, Optional = true)
 	 * @var iTestDependency
 	 */
 	public $property;
 }
 
-class ProtectedPropertyClass
+class ProtectedPropertyClass extends Object
 {
 
 	public static $classname = __CLASS__;
 	/**
-	 * @Summon
-	 * @SummonType(NormalTestDependency::$classname)
+	 * @Summon(NormalTestDependency::$classname)
 	 * @var NormalTestDependency
 	 */
 	protected $property;
@@ -630,13 +603,12 @@ class ProtectedPropertyClass
 
 }
 
-class PrivatePropertyClass
+class PrivatePropertyClass extends Object
 {
 
 	public static $classname = __CLASS__;
 	/**
-	 * @Summon
-	 * @SummonType(NormalTestDependency::$classname)
+	 * @Summon(NormalTestDependency::$classname)
 	 * @var NormalTestDependency
 	 */
 	private $property;
@@ -648,14 +620,14 @@ class PrivatePropertyClass
 
 }
 
-class PrivateMethodClass
+class PrivateMethodClass extends Object
 {
 
 	public static $classname = __CLASS__;
 	private $summoned = false;
 
 	/**
-	 * @Summon
+	 * @SummonMethod
 	 */
 	private function methodSummon()
 	{
@@ -669,14 +641,14 @@ class PrivateMethodClass
 
 }
 
-class ProtectedMethodClass
+class ProtectedMethodClass extends Object
 {
 
 	public static $classname = __CLASS__;
 	private $summoned = false;
 
 	/**
-	 * @Summon
+	 * @SummonMethod
 	 */
 	protected function methodSummon()
 	{
@@ -690,7 +662,7 @@ class ProtectedMethodClass
 
 }
 
-class MultipleTestClass implements iTest
+class MultipleTestClass extends Object implements iTest
 {
 
 	public static $classname = __CLASS__;
@@ -702,14 +674,14 @@ class MultipleTestClass implements iTest
 
 }
 
-class NormalMethodSummon
+class NormalMethodSummon extends Object
 {
 
 	public static $classname = __CLASS__;
 	private $dependency;
 
 	/**
-	 * @Summon
+	 * @SummonMethod
 	 */
 	public function summon(NormalTestDependency $dependency)
 	{
@@ -723,14 +695,14 @@ class NormalMethodSummon
 
 }
 
-class EmptyMethodSummon
+class EmptyMethodSummon extends Object
 {
 
 	public static $classname = __CLASS__;
 	private $summoned = false;
 
 	/**
-	 * @Summon
+	 * @SummonMethod
 	 */
 	public function summon()
 	{
@@ -744,14 +716,14 @@ class EmptyMethodSummon
 
 }
 
-class EmptyMethodNoSummon
+class EmptyMethodNoSummon extends Object
 {
 
 	public static $classname = __CLASS__;
 	private $summoned = false;
 
 	/**
-	 * @Summon(false)
+	 * @SummonMethod
 	 */
 	public function summon()
 	{
@@ -760,7 +732,7 @@ class EmptyMethodNoSummon
 
 	public function noSummon()
 	{
-		$this->summoned = true;
+		$this->summoned = false;
 	}
 
 	public function isSummoned()
@@ -777,7 +749,7 @@ interface iTest
 	public function getTestDependency();
 }
 
-class TestClassWithoutITest
+class TestClassWithoutITest extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -789,7 +761,7 @@ interface iTestDependency
 	const iTestDependency = __CLASS__;
 }
 
-class ScalarParamTestClass
+class ScalarParamTestClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -801,7 +773,7 @@ class ScalarParamTestClass
 
 }
 
-class ArrayOptionalParamTestClass
+class ArrayOptionalParamTestClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -813,7 +785,7 @@ class ArrayOptionalParamTestClass
 
 }
 
-class ClassNullableParamTestClass
+class ClassNullableParamTestClass extends Object
 {
 
 	public static $classname = __CLASS__;
@@ -843,7 +815,7 @@ class ArrayParamTestClass
 
 }
 
-class NormalTestClass implements iTest
+class NormalTestClass extends Object implements iTest
 {
 
 	public static $classname = __CLASS__;
@@ -861,7 +833,7 @@ class NormalTestClass implements iTest
 
 }
 
-class InterfaceTestClass implements iTest
+class InterfaceTestClass extends Object implements iTest
 {
 
 	public static $classname = __CLASS__;
@@ -879,14 +851,14 @@ class InterfaceTestClass implements iTest
 
 }
 
-class NormalTestDependency
+class NormalTestDependency extends Object
 {
 
 	public static $classname = __CLASS__;
 
 }
 
-class InterfaceTestDependency implements iTestDependency
+class InterfaceTestDependency extends Object implements iTestDependency
 {
 
 	public static $classname = __CLASS__;

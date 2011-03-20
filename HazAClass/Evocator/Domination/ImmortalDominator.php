@@ -17,7 +17,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/Evocator/domination/ImmortalDomin#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\Evocator\domination;
+namespace HazAClass\Evocator\Domination;
 
 use HazAClass\Evocator\Evocator;
 use HazAClass\Evocator\CreatureSummoner;
@@ -30,30 +30,22 @@ class ImmortalDominator extends AbstractDominator
 {
 
 	public static $classname = __CLASS__;
-	private static $creaturePool = array();
+	
+	private $creaturePool = array();
 
-	public function setCreature($creatureName, $creature)
+	public function SetEvocator(Evocator $evocator)
 	{
-		parent::setCreature($creatureName, $creature);
-		self::$creaturePool[$this->getGrandEvocatorIdentity()][$creatureName] = $creature;
+		if($this->evocator === null)
+			parent::SetEvocator($evocator);
 	}
+	
 
-	public function dominateCreature()
+	public function DominateCreature()
 	{
-		if(!isset(self::$creaturePool[$this->getGrandEvocatorIdentity()][$this->creatureName]))
-			$this->setCreature($this->creatureName, $this->getSummoner()->summon());
-
-		return $this->creature;
-	}
-
-	public function setCreatureClassname($creatureClassname)
-	{
-		$this->creatureClassname = $creatureClassname;
-	}
-
-	protected function getGrandEvocatorIdentity()
-	{
-		return $this->evocator->getGrandEvocator()->getIdentity();
+//		if(!isset($this->creaturePool[$this->creatureType->Get])
+//			$this->setCreature($this->creatureName, $this->getSummoner()->summon());
+//
+//		return $this->creature;
 	}
 
 }
