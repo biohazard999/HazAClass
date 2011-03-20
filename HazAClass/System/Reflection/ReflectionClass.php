@@ -74,7 +74,10 @@ class ReflectionClass extends \ReflectionClass
 	 */
 	public function getConstructor()
 	{
-		return $this->createOverrideReflectionMethod(parent::getConstructor());
+		$ctor = parent::getConstructor();
+		if($ctor === null)
+			return;
+		return $this->_getMethod($ctor->getName());
 	}
 
 	/**
@@ -151,7 +154,7 @@ class ReflectionClass extends \ReflectionClass
 			foreach(parent::getInterfaces() as $interface)
 				$this->interfaces[$interface->getName()] = $this->createOverrideReflectionClass($interface);
 		}
-		
+
 		return $this->interfaces;
 	}
 
