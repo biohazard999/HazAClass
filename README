@@ -1,0 +1,25 @@
+
+
+
+1. Installing & Requirements
+    1.1 System Requirements
+        Minimum: PHP 5.3.5
+
+    1.2 Installing
+        1.2.1 Via Pear
+            HazAClass is hosted on PearHub.org
+            To install:
+                pear channel-discover pearhub.org
+                pear install pearhub/HazAClass
+
+2. Buildserver
+    http://x2.delegate.at/jenkins/
+
+3. Early-Birds
+    https://github.com/biohazard999/HazAClass
+
+4. Licence
+    BSD - http://www.opensource.org/licenses/bsd-license.php
+
+5. Copyright
+    2011 Manuel Grundner - m.grundner@delegate.at (x2.delegate.at)
