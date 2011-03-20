@@ -40,7 +40,7 @@
             <arg line="--jdepend-xml=${bld}/logs/jdepend.xml
               --jdepend-chart=${bld}/pdepend/dependencies.svg
               --overview-pyramid=${bld}/pdepend/overview-pyramid.svg
-              ${source}" />
+              ." />
         </exec>
     </target>
 
