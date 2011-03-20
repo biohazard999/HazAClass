@@ -45,7 +45,6 @@
 
     <target name="phpmd" description="Generate pmd.xml using PHPMD">
         <exec executable="phpmd">
-<!--            <arg line="${source} xml build/phpmd.xml --reportfile ${basedir}/build/logs/pmd.xml" />-->
             <arg line="${source} xml codesize --reportfile ${basedir}/build/logs/pmd.xml" />
         </exec>
     </target>
