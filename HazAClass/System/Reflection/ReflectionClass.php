@@ -29,6 +29,18 @@ class ReflectionClass extends \ReflectionClass
 	public static $classname = __CLASS__;
 	private $usings;
 	private $attributes;
+	/**
+	 * @var GenericList
+	 */
+	private $methods;
+	/**
+	 * @var GenericList
+	 */
+	private $properties;
+	/**
+	 * @var GenericList
+	 */
+	private $interfaces;
 
 	public function HasAttribute($name)
 	{
@@ -71,7 +83,18 @@ class ReflectionClass extends \ReflectionClass
 	 */
 	public function getMethod($name)
 	{
-		return $this->createOverrideReflectionMethod(parent::getMethod($name));
+		return $this->_getMethod($name);
+	}
+
+	private function _getMethod($name)
+	{
+		if($this->methods === null)
+			$this->methods = new GenericList(ReflectionMethod::$classname);
+
+		if($this->methods->IndexExists($name))
+			return $this->methods[$name];
+
+		return $this->methods[$name] = $this->createOverrideReflectionMethod(parent::getMethod($name));
 	}
 
 	/**
@@ -82,7 +105,7 @@ class ReflectionClass extends \ReflectionClass
 	{
 		$result = new GenericList(ReflectionMethod::$classname);
 		foreach(parent::getMethods($filter) as $method)
-			$result[$method->getName()] = $this->createOverrideReflectionMethod($method);
+			$result[$method->getName()] = $this->_getMethod($method->getName());
 
 		return $result;
 	}
@@ -93,7 +116,18 @@ class ReflectionClass extends \ReflectionClass
 	 */
 	public function getProperty($name)
 	{
-		return $this->createOverrideReflectionProperty(parent::getProperty($name));
+		return $this->_getProperty($name);
+	}
+
+	private function _getProperty($name)
+	{
+		if($this->properties === null)
+			$this->properties = new GenericList(ReflectionProperty::$classname);
+
+		if($this->properties->IndexExists($name))
+			return $this->properties[$name];
+
+		return $this->properties[$name] = $this->createOverrideReflectionProperty(parent::getProperty($name));
 	}
 
 	/**
@@ -104,18 +138,21 @@ class ReflectionClass extends \ReflectionClass
 	{
 		$result = new GenericList(ReflectionProperty::$classname);
 		foreach(parent::getProperties($filter) as $property)
-			$result[$property->getName()] = $this->createOverrideReflectionProperty($property);
+			$result[$property->getName()] = $this->_getProperty($property->getName());
 
 		return $result;
 	}
 
 	public function getInterfaces()
 	{
-		$result = new GenericList(ReflectionClass::$classname);
-		foreach(parent::getInterfaces() as $interface)
-			$result[$interface->getName()] = $this->createOverrideReflectionClass($interface);
-
-		return $result;
+		if($this->interfaces === null)
+		{
+			$this->interfaces = new GenericList(ReflectionClass::$classname);
+			foreach(parent::getInterfaces() as $interface)
+				$this->interfaces[$interface->getName()] = $this->createOverrideReflectionClass($interface);
+		}
+		
+		return $this->interfaces;
 	}
 
 	public function getParentClass()
