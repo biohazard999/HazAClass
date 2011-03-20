@@ -45,11 +45,18 @@ class String extends Object implements \Countable
 		return new self($str);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function ToString()
 	{
 		return $this->string;
 	}
 
+	/**
+	 * @param string $str1, string $str2, string $str3, ...
+	 * @return String 
+	 */
 	public function Concat()
 	{
 		$arr = func_get_args();
@@ -58,6 +65,11 @@ class String extends Object implements \Countable
 		return $this;
 	}
 
+	/**
+	 * @param int $start
+	 * @param int $len
+	 * @return String 
+	 */
 	public function SubString($start = 0, $len = null)
 	{
 		if($len === null)
@@ -67,16 +79,26 @@ class String extends Object implements \Countable
 		return $this;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function Length()
 	{
 		return strlen($this->string);
 	}
 
+	/**
+	 * @return int
+	 */
 	public function count()
 	{
 		return $this->Length();
 	}
 
+	/**
+	 * @param string $search
+	 * @return bool
+	 */
 	public function InString($search)
 	{
 		if($search === '')
@@ -85,6 +107,10 @@ class String extends Object implements \Countable
 		return $this->Position($search) !== null;
 	}
 
+	/**
+	 * @param string $search
+	 * @return bool
+	 */
 	public function Contains($search)
 	{
 		if(is_array($search))
@@ -99,6 +125,10 @@ class String extends Object implements \Countable
 		return $this->InString($search);
 	}
 
+	/**
+	 * @param string $search
+	 * @return bool
+	 */
 	public function StartsWith($search)
 	{
 		$clone = clone $this;
@@ -106,6 +136,10 @@ class String extends Object implements \Countable
 		return $clone->SubString(0, self::Instance($search)->Length()) == $search;
 	}
 
+	/**
+	 * @param string $search
+	 * @return bool
+	 */
 	public function EndsWith($search)
 	{
 		$str = clone ($this);
@@ -113,6 +147,11 @@ class String extends Object implements \Countable
 		return $str->SubString(String::Instance($search)->Length($search) * -1)->ToString() == $search;
 	}
 
+	/**
+	 * @param string $remove
+	 * @param int $count
+	 * @return String
+	 */
 	public function Remove($remove, $count = null)
 	{
 		if($this->string === $remove)
@@ -120,6 +159,10 @@ class String extends Object implements \Countable
 		return $this->Replace($remove, '', $count);
 	}
 
+	/**
+	 * @param string $remove
+	 * @return String 
+	 */
 	public function RemoveEnd($remove)
 	{
 		if($this->EndsWith($remove))
@@ -128,6 +171,10 @@ class String extends Object implements \Countable
 		return $this;
 	}
 
+	/**
+	 * @param string $remove
+	 * @return String 
+	 */
 	public function RemoveBegin($remove)
 	{
 		if($this->StartsWith($remove))
@@ -136,30 +183,54 @@ class String extends Object implements \Countable
 		return $this;
 	}
 
+	/**
+	 * @param string $search
+	 * @param string $replace
+	 * @param int $count
+	 * @return String 
+	 */
 	public function Replace($search, $replace, $count = null)
 	{
 		$this->string = str_replace($search, $replace, $this->string, $count);
 		return $this;
 	}
 
+	/**
+	 * @param string $search
+	 * @return bool
+	 */
 	public function Position($search)
 	{
 		$result = strpos($this->string, $search);
 		return $result === false ? null : $result;
 	}
 
+	/**
+	 * @param string $search
+	 * @return bool
+	 */
 	public function ReversePosition($search)
 	{
 		$result = strrpos($this->string, $search);
 		return $result === false ? null : $result;
 	}
 
+	/**
+	 * @param int $multiplier
+	 * @return String 
+	 */
 	public function Repeat($multiplier)
 	{
 		$multiplier = $multiplier > 0 ? $multiplier : 0;
-		return str_repeat($this->string, $multiplier);
+		$this->string = str_repeat($this->string, $multiplier);
+		return $this;
 	}
 
+	/**
+	 * @param string $prefix
+	 * @param string $postfix
+	 * @return String 
+	 */
 	public function UUID($prefix = '', $postfix = '')
 	{
 		$chars = md5(uniqid(mt_rand(), true));
@@ -173,42 +244,63 @@ class String extends Object implements \Countable
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function Trim()
 	{
 		$this->string = trim($this->string);
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function TrimLeft()
 	{
 		$this->string = ltrim($this->string);
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function TrimRight()
 	{
 		$this->string = rtrim($this->string);
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function LowerCase()
 	{
 		$this->string = strtolower($this->string);
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function UpperCase()
 	{
 		$this->string = strtoupper($this->string);
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function UpperCaseFirst()
 	{
 		$this->string = ucfirst($this->string);
 		return $this;
 	}
 
+	/**
+	 * @return String 
+	 */
 	public function LowerCaseFirst()
 	{
 		$this->string = lcfirst($this->string);
