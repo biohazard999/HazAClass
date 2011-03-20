@@ -1,43 +1,49 @@
 <?php
-/** ********************************************************************************************************$
- * $Id:: AbstractAttributeInterpreterValueHolderParameterComplex.php 4 2010-11-06 12:37:02Z manuelgrundner  $
+/** * *******************************************************************************************************$
+ * $Id:: AttributeInterpreterValueHolderParameterEnum.php 4 2010-11-06 12:37:02Z manuelgrundner             $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
  * @copyright Copyright (c) 2009, Manuel Grundner & Ren� Grundner                                           $
  *                                                                                                          $
- *********************************************Documentation**************************************************
+ * ********************************************Documentation**************************************************
  *                                                                                                          $
  * @package                                                                                                 $
  * @subpackage                                                                                              $
  *                                                                                                          $
- ******************************************Subversion Information********************************************
+ * *****************************************Subversion Information********************************************
  * $LastChangedDate:: 2010-11-06 13:37:02 +0100 (Sa, 06 Nov 2010)                                           $
  * $LastChangedRevision:: 4                                                                                 $
  * $LastChangedBy:: manuelgrundner                                                                          $
- * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AbstractAttribute#$
- ***********************************************************************************************************/
+ * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
+ * ********************************************************************************************************* */
 
-namespace HazAClass\core\attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-abstract class AbstractAttributeInterpreterValueHolderParameterComplex extends AbstractAttributeInterpreterValueHolderParameter
+class AttributeInterpreterValueHolderParameterEnum extends AbstractAttributeInterpreterValueHolderParameterComplex
 {
 
 	public static $classname = __CLASS__;
-	private $fullQualifiedName;
+	private $enumType;
 
-	public function getFullQualifiedName()
+	public function GetEnumType()
 	{
-		return $this->fullQualifiedName;
+		return $this->enumType;
 	}
 
-	public function setFullQualifiedName($fullQualifiedName)
+	public function SetEnumType($enumType)
 	{
-		$this->fullQualifiedName = $fullQualifiedName;
+		$this->enumType = $enumType;
 	}
 
-	abstract public function getShortName();
-	abstract public function setShortName($shortName);
+	public function GetShortName()
+	{
+		return $this->GetEnumType();
+	}
+
+	public function SetShortName($shortName)
+	{
+		$this->SetEnumType($shortName);
+	}
 
 }
-
 
 ?>

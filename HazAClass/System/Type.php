@@ -18,6 +18,8 @@
 
 namespace HazAClass\System;
 
+use HazAClass\System\Reflection\ReflectionClass;
+
 final class Type extends Object
 {
 
@@ -33,7 +35,14 @@ final class Type extends Object
 
 	public function __construct($objectType)
 	{
+		if(!Type::IsTypeExisting($objectType))
+			throw new \InvalidArgumentException($objectType.' is not existing');
 		$this->type = $objectType;
+	}
+
+	public static function IsTypeExisting($objectType)
+	{
+		return class_exists($objectType) || interface_exists($objectType);
 	}
 
 	/**
@@ -79,7 +88,7 @@ final class Type extends Object
 	public function GetReflectionClass()
 	{
 		if($this->reflectionClass === null)
-			$this->reflectionClass = new \ReflectionClass($this->GetFullName());
+			$this->reflectionClass = new ReflectionClass($this->GetFullName());
 		return $this->reflectionClass;
 	}
 
@@ -156,6 +165,16 @@ final class Type extends Object
 	public function GetFileName()
 	{
 		return $this->GetReflectionClass()->getFileName();
+	}
+
+	public static function IsClassnameParitallyQualified($classname)
+	{
+		return String::Instance($classname)->Contains('\\');
+	}
+
+	public static function IsClassnameFullQualified($classname)
+	{
+		return String::Instance($classname)->StartsWith('\\');
 	}
 
 }

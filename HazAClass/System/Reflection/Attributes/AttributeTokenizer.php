@@ -16,7 +16,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeTokenize#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
 use HazAClass\System\Parser\Token\AbstractTokenizer;
 
@@ -55,7 +55,6 @@ class AttributeTokenizer extends AbstractTokenizer
 			case self::T_BRACE_CLOSE:
 			case self::T_OPERATOR_ASSIGN:
 			case self::T_OPERATOR_COMMA:
-			case self::T_OPERATOR_ASSIGN:
 			case self::T_TRUE:
 			case self::T_FALSE:
 			case self::T_DOLLAR:

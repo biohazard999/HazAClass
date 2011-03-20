@@ -1,5 +1,4 @@
 <?php
-
 /** * *******************************************************************************************************$
  * $Id:: ReflectionProperty.php 95 2011-01-10 17:00:39Z manuelgrundner                                      $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
@@ -17,16 +16,9 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/reflection/ReflectionPropert#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\core\reflection;
+namespace HazAClass\System\Reflection;
 
-use HazAClass\core\cache\CacheHelper;
-use HazAClass\core\cache\CacheInvalidatedException;
-use HazAClass\core\cache\iCacheProvider;
-use HazAClass\core\debug\Debug;
-use HazAClass\core\attributes\AttributeBuilder;
-use HazAClass\utils\ClassNameUtil;
-use HazAClass\HAF\attributes\GetterAttribute;
-use HazAClass\HAF\attributes\SetterAttribute;
+use HazAClass\System\Reflection\Attributes\AttributeBuilder;
 
 class ReflectionProperty extends \ReflectionProperty
 {
@@ -34,24 +26,24 @@ class ReflectionProperty extends \ReflectionProperty
 	public static $classname = __CLASS__;
 	private $attributes;
 
-	public function hasAttribute($name)
+	public function HasAttribute($name)
 	{
-		return $this->getAttributes()->hasIndex($name);
+		return $this->getAttributes()->IndexExists($name);
 	}
 
-	public function getAttribute($name)
+	public function GetAttribute($name)
 	{
-		return $this->getAttributes()->get($name);
+		return $this->getAttributes()->offsetGet($name);
 	}
 
-	public function getSetterName()
+	public function GetSetterName()
 	{
-		if($this->hasAttribute(SetterAttribute::$classname))
-			return $this->getAttribute(SetterAttribute::$classname)->getSetterName();
+		if($this->HasAttribute(SetterAttribute::$classname))
+			return $this->GetAttribute(SetterAttribute::$classname)->getSetterName();
 		return ClassNameUtil::buildSetterName($this->name);
 	}
 
-	public function getGetterName()
+	public function GetGetterName()
 	{
 		if($this->hasAttribute(GetterAttribute::$classname))
 			return $this->getAttribute(GetterAttribute::$classname)->getGetterName();
@@ -61,36 +53,14 @@ class ReflectionProperty extends \ReflectionProperty
 	/**
 	 * @return Map[Attribute]
 	 */
-	public function getAttributes()
+	public function GetAttributes()
 	{
 		if($this->attributes === null)
 		{
-			$fileCache = ReflectionClass::getFileChangedCache();
-			$attributesCache = ReflectionClass::getAttributesCache();
-
-			$name = $this->getCacheKeyName();
-
-			try
-			{
-				CacheHelper::checkFileChange($fileCache, $this->getDeclaringClass()->getFileName());
-				return $attributesCache->GetValue($name);
-			}
-			catch(CacheInvalidatedException $e)
-			{
-				$builder = new AttributeBuilder($this);
-				$attributesCache->store($name, $builder->getAttributes(), iCacheProvider::NEVER);
-				$this->attributes = $builder->getAttributes();
-			}
+			$builder = new AttributeBuilder($this);
+			$this->attributes = $builder->getAttributes();
 		}
 		return $this->attributes;
-	}
-
-	protected function getCacheKeyName()
-	{
-		if($this->isStatic())
-			return $this->getDeclaringClass()->getName().'::$'.$this->getName();
-
-		return $this->getDeclaringClass()->getName().'->'.$this->getName();
 	}
 
 	public function getDeclaringClass()
@@ -98,27 +68,6 @@ class ReflectionProperty extends \ReflectionProperty
 		$class = parent::getDeclaringClass();
 		return new ReflectionClass($class->getName());
 	}
-
-	public function getUsings()
-	{
-		return $this->getDeclaringClass()->getUsings();
-	}
-
-	public function inNamespace()
-	{
-		return $this->getDeclaringClass()->inNamespace();
-	}
-
-	public function getNamespaceName()
-	{
-		return $this->getDeclaringClass()->getNamespaceName();
-	}
-
-	public function getFileName()
-	{
-		return $this->getDeclaringClass()->getFileName();
-	}
-
 }
 
 ?>

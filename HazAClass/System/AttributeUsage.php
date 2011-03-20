@@ -1,6 +1,6 @@
 <?php
 /** * *******************************************************************************************************$
- * $Id:: AttributeInterpreterValueHolderParameterEnum.php 4 2010-11-06 12:37:02Z manuelgrundner             $
+ * $Id:: AttributeUsage.php 6 2010-11-07 15:18:15Z manuelgrundner                                           $
  * @author Manuel Grundner <biohazard999@gmx.at>,  Ren� Grundner <hazard999@gmx.de>                         $
  * @copyright Copyright (c) 2009, Manuel Grundner & Ren� Grundner                                           $
  *                                                                                                          $
@@ -10,38 +10,37 @@
  * @subpackage                                                                                              $
  *                                                                                                          $
  * *****************************************Subversion Information********************************************
- * $LastChangedDate:: 2010-11-06 13:37:02 +0100 (Sa, 06 Nov 2010)                                           $
- * $LastChangedRevision:: 4                                                                                 $
+ * $LastChangedDate:: 2010-11-07 16:18:15 +0100 (So, 07 Nov 2010)                                           $
+ * $LastChangedRevision:: 6                                                                                 $
  * $LastChangedBy:: manuelgrundner                                                                          $
- * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
+ * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeUsage.ph#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System;
 
-class AttributeInterpreterValueHolderParameterEnum extends AbstractAttributeInterpreterValueHolderParameterComplex
+class AttributeUsage extends Enum
 {
 
 	public static $classname = __CLASS__;
-	private $enumType;
 
-	public function GetEnumType()
+	public static function OnClass()
 	{
-		return $this->enumType;
+		return self::GetInstance(__FUNCTION__);
 	}
 
-	public function SetEnumType($enumType)
+	public static function OnMethod()
 	{
-		$this->enumType = $enumType;
+		return self::GetInstance(__FUNCTION__);
 	}
 
-	public function GetShortName()
+	public static function OnProperty()
 	{
-		return $this->GetEnumType();
+		return self::GetInstance(__FUNCTION__);
 	}
 
-	public function SetShortName($shortName)
+	public static function OnAny()
 	{
-		$this->SetEnumType($shortName);
+		return self::GetInstance(__FUNCTION__);
 	}
 
 }

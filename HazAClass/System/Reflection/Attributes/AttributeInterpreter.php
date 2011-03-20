@@ -16,32 +16,30 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\core\attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-use HazAClass\utils\ReflectionUtil;
-use HazAClass\core\interpreter\IInterpreter;
-use HazAClass\core\tokenizer\Token;
-use HazAClass\core\tokenizer\Tokens;
-use HazAClass\core\attributes\AttributeTokenizer;
-use HazAClass\core\collections\Collection;
-use HazAClass\core\debug\Debug;
-use HazAClass\utils\StringUtil;
+use HazAClass\System\Collection\Generic\GenericList;
+use HazAClass\System\Parser\Token\Tokens;
+use HazAClass\System\String;
 
-class AttributeInterpreter implements IInterpreter
+class AttributeInterpreter
 {
 
 	public static $classname = __CLASS__;
+	/**
+	 * @var GenericList
+	 */
 	private $valueHolders;
 	private $currentValueHolder;
 
 	public function __construct()
 	{
-		$this->valueHolders = new Collection(AttributeInterpreterValueHolder::$classname);
+		$this->valueHolders = new GenericList(AttributeInterpreterValueHolder::$classname);
 	}
 
-	public function interpret($tokens)
+	public function Interpret($tokens)
 	{
-		$this->valueHolders->flush();
+		$this->valueHolders->FlushElements();
 		$this->doInterpret($tokens);
 
 		return $this->valueHolders;
@@ -90,6 +88,8 @@ class AttributeInterpreter implements IInterpreter
 			return $tokens->getCurrentToken()->getValue();
 	}
 
+	private $valueName;
+
 	protected function interpretValues(Tokens $tokens)
 	{
 		if($tokens->isA(AttributeTokenizer::T_BRACE_OPEN))
@@ -107,25 +107,35 @@ class AttributeInterpreter implements IInterpreter
 
 					case \T_STRING:
 						$found = false;
-						
+						if($tokens->IsNextTokenA(AttributeTokenizer::T_OPERATOR_ASSIGN))
+						{
+							$this->valueName = $tokens->GetCurrentToken()->GetValue();
+							$tokens->SkipUntil(AttributeTokenizer::T_OPERATOR_ASSIGN);
+							break;
+						}
 						$this->currentValueHolder->addParam($this->tryInterpretEnumValue($tokens, $found));
 						$this->currentValueHolder->addParam($this->tryInterpretClassConstantValue($tokens, $found));
 						$this->currentValueHolder->addParam($this->tryInterpretStaticPropertyValue($tokens, $found));
+						if($found)
+							$this->valueName = null;
 						break;
 					case T_ENCAPSED_AND_WHITESPACE:
 					case T_CONSTANT_ENCAPSED_STRING:
 						$this->currentValueHolder->addParam($this->interpretStringValue($tokens));
+						$this->valueName = null;
 						break;
 					case T_DNUMBER:
 						$this->currentValueHolder->addParam($this->interpretFloatValue($tokens));
+						$this->valueName = null;
 						break;
 					case T_LNUMBER:
 						$this->currentValueHolder->addParam($this->interpretIntValue($tokens));
+						$this->valueName = null;
 						break;
 					case AttributeTokenizer::T_TRUE:
 					case AttributeTokenizer::T_FALSE:
-
 						$this->currentValueHolder->addParam($this->interpretBoolValue($tokens));
+						$this->valueName = null;
 						break;
 				}
 				$tokens->moveNext();
@@ -136,6 +146,7 @@ class AttributeInterpreter implements IInterpreter
 	protected function interpretBoolValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
+		$p->setName($this->valueName);
 		$v = (boolean) $tokens->getCurrentToken()->getValue();
 		$p->setValue($v);
 		return $p;
@@ -144,6 +155,7 @@ class AttributeInterpreter implements IInterpreter
 	protected function interpretIntValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
+		$p->setName($this->valueName);
 		$v = (int) $tokens->getCurrentToken()->getValue();
 		$p->setValue($v);
 		return $p;
@@ -152,6 +164,7 @@ class AttributeInterpreter implements IInterpreter
 	protected function interpretFloatValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
+		$p->setName($this->valueName);
 		$v = (float) $tokens->getCurrentToken()->getValue();
 		$p->setValue($v);
 		return $p;
@@ -160,33 +173,28 @@ class AttributeInterpreter implements IInterpreter
 	protected function interpretStringValue(Tokens $tokens)
 	{
 		$p = new AttributeInterpreterValueHolderParameterNative();
-		$v = (string) $tokens->getCurrentToken()->getValue();
+		$p->setName($this->valueName);
+		$v = String::Instance($tokens->getCurrentToken()->getValue());
 		$this->removeApostrophes($v);
-		$p->setValue($v);
+		$p->setValue($v->ToString());
 		return $p;
 	}
 
-	private function removeApostrophes(&$string)
+	private function removeApostrophes(String $string)
 	{
 		$char = '\'';
-		if(!$this->removeTrailingAndLeadingChar($string, $char))
-			$this->removeDoubleQuote($string);
-	}
-
-	private function removeDoubleQuote(&$string)
-	{
-		$this->removeTrailingAndLeadingChar($string, '"');
-	}
-
-	private function removeTrailingAndLeadingChar(&$string, $char)
-	{
-		if(StringUtil::startsWith($string, $char))
+		if($string->StartsWith($char))
 		{
-			$string = StringUtil::removeBegin($string, $char);
-			$string = StringUtil::removeEnd($string, $char);
-			return true;
+			$string->RemoveBegin($char);
+			$string->RemoveEnd($char);
 		}
-		return false;
+		$char = '"';
+
+		if($string->StartsWith($char))
+		{
+			$string->RemoveBegin($char);
+			$string->RemoveEnd($char);
+		}
 	}
 
 	protected function tryInterpretEnumValue(Tokens $tokens, &$found)
@@ -203,6 +211,7 @@ class AttributeInterpreter implements IInterpreter
 					if($tokens->peak()->isA(AttributeTokenizer::T_BRACE_CLOSE))
 					{
 						$param = new AttributeInterpreterValueHolderParameterEnum();
+						$param->setName($this->valueName);
 						$param->setEnumType((string) $tokens->getCurrentToken()->getValue());
 						$tokens->moveNext();
 						$tokens->skipUntil(\T_STRING);
@@ -227,6 +236,7 @@ class AttributeInterpreter implements IInterpreter
 			if($tokens->peak()->isA(\T_STRING))
 			{
 				$param = new AttributeInterpreterValueHolderParameterClassConstant();
+				$param->setName($this->valueName);
 				$param->setConstantName((string) $tokens->getCurrentToken()->getValue());
 				$tokens->moveNext();
 				$tokens->skipUntil(\T_STRING);
@@ -247,6 +257,7 @@ class AttributeInterpreter implements IInterpreter
 			if($tokens->peak()->isA(\T_VARIABLE))
 			{
 				$param = new AttributeInterpreterValueHolderParameterStaticProperty();
+				$param->setName($this->valueName);
 				$param->setPropertyName((string) $tokens->getCurrentToken()->getValue());
 				$tokens->moveNext();
 				$tokens->skipUntil(T_VARIABLE);

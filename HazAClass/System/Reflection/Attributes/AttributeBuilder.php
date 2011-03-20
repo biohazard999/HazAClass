@@ -16,15 +16,15 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeBuilder.#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\core\attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
-use HazAClass\core\collections\Map;
 use HazAClass\core\tokenizer\Tokens;
 use HazAClass\core\tokenizer\Token;
-use HazAClass\core\debug\Debug;
-use HazAClass\core\collections\Collection;
-use HazAClass\core\generic\Invoker;
-use HazAClass\utils\ReflectionUtil;
+use HazAClass\System\Collection\Generic\GenericList;
+use HazAClass\System\Attribute;
+use HazAClass\System\Type;
+use HazAClass\System\TypeManager;
+use HazAClass\System\Reflection\ReflectionClass;
 
 class AttributeBuilder
 {
@@ -53,14 +53,14 @@ class AttributeBuilder
 			$this->reflectionClass = $ref->getDeclaringClass();
 		else
 			$this->reflectionClass = $ref;
-		$this->attributeValueHolders = new Collection(AttributeInterpreterValueHolder::$classname);
+		$this->attributeValueHolders = new GenericList(AttributeInterpreterValueHolder::$classname);
 	}
 
-	public function getAttributes()
+	public function GetAttributes()
 	{
 		if($this->attributes === null)
 		{
-			$this->attributes = new Map(Attribute::$classname);
+			$this->attributes = new GenericList(Attribute::$classname);
 			$this->build();
 		}
 		return $this->attributes;
@@ -74,18 +74,18 @@ class AttributeBuilder
 
 
 		$parser = new AttributesParser();
-		$output = $parser->parse($docBlock);
+		$output = $parser->Parse($docBlock);
 
 
 		$tokenizer = new AttributeTokenizer();
-		$tokens = $tokenizer->tokenize($output);
+		$tokens = $tokenizer->Tokenize($output);
 
 		$interpreter = new AttributeInterpreter();
-		$this->attributeValueHolders = $interpreter->interpret($tokens);
-		$this->create();
+		$this->attributeValueHolders = $interpreter->Interpret($tokens);
+		$this->Create();
 	}
 
-	public function create()
+	public function Create()
 	{
 		foreach($this->attributeValueHolders as $valueHolder)/* @var $valueHolder AttributeInterpreterValueHolder */
 		{
@@ -98,42 +98,55 @@ class AttributeBuilder
 			}
 			catch(AttributeException $e)
 			{
-				Debug::log($e->getMessage(), __METHOD__);
 				continue; //@todo überprüfen ob das sinnvoll ist
 			}
 
 			if(!is_subclass_of($classname, Attribute::$classname))
-				throw new AttributeException('An Attribute must be decendet by '.Attribute::$classname.'
+				throw new \InvalidArgumentException('An Attribute must be decendet by '.Attribute::$classname.'
 											  Given: '.$classname);
 
-		
 			$attribute = $this->invoke($classname, $valueHolder->getUnnamedParamsAsArray());
 
+
+
 			$this->setNamedParams($attribute, $valueHolder->getNamedParamsAsArray());
+
+
+
+
 			$this->attributes[get_class($attribute)] = $attribute;
 		}
 	}
 
-	private function invoke($classname, array $params)
+	private function Invoke($classname, array $params)
 	{
-		$refClass = \HazAClass\utils\ReflectionUtil::getReflectionClass($classname);
+		$refClass = TypeManager::GetTypeInstance($classname)->GetReflectionClass();
 		try
 		{
-			$attribute = $refClass->newInstanceArgs($params);
+			if($refClass->getConstructor() !== null && count($refClass->getConstructor()->getParameters()) > 0)
+				return $refClass->newInstanceArgs($params);
+			return $refClass->newInstanceArgs();
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			throw new AttributeException('Could not instanciate '.$classname, 500, $e);
 		}
-		return $attribute;
 	}
 
-	public function setNamedParams(Attribute $attribute, array $params)
+	protected function SetNamedParams(Attribute $attribute, array $params)
 	{
 		foreach($params as $name => $value)
 		{
-			$setter = ClassNameUtil::buildSetterName($name);
+			$propRef = $attribute->GetType()->GetReflectionClass()->getProperty($name);
+			if($propRef->isPublic())
+			{
+				$propRef->setValue($attribute, $value);
+			}
+			else
+			{
+			$setter = $attribute->GetType()->SetterOf($name);
 			$attribute->$setter($value);
+			}
 		}
 	}
 
@@ -142,42 +155,48 @@ class AttributeBuilder
 		if($valueHolder->isFullQualified())
 		{
 			$name = $valueHolder->getShortName();
-			if(ReflectionUtil::classOrInterfaceExists($name) && $this->checkAttributeDecendence($name))
+			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
 
 			$name = $valueHolder->getFullName();
-			if(ReflectionUtil::classOrInterfaceExists($name) && $this->checkAttributeDecendence($name))
+			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
 		}
 		else
 		{
 			$name = self::NS_SEP.$valueHolder->getShortName();
 
-			if(ReflectionUtil::classOrInterfaceExists($name) && $this->checkAttributeDecendence($name))
+			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
 
 			$name = self::NS_SEP.$valueHolder->getFullName();
-			if(ReflectionUtil::classOrInterfaceExists($name) && $this->checkAttributeDecendence($name))
+			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
 		}
 
-		if($this->reflector->inNamespace())
+		$reflector = $this->reflector instanceof ReflectionClass ? $this->reflector : $this->reflector->getDeclaringClass();
+
+		if($reflector->inNamespace())
 		{
-			$ns = $this->reflector->getNamespaceName().self::NS_SEP;
+			$ns = $reflector->getNamespaceName().self::NS_SEP;
 			$name = $ns.$valueHolder->getShortName();
-			if(ReflectionUtil::classOrInterfaceExists($name) && $this->checkAttributeDecendence($name))
+			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
 
 			$name = $ns.$valueHolder->getFullName();
-			if(ReflectionUtil::classOrInterfaceExists($name) && $this->checkAttributeDecendence($name))
+			if(Type::IsTypeExisting($name) && $this->checkAttributeDecendence($name))
 				return $name;
 		}
 
-		$refUsings = $this->reflector->getUsings();
+		if($this->reflector instanceof ReflectionClass)
+			$refUsings = $this->reflector->getUsings();
+		else
+			$refUsings = $this->reflector->getDeclaringClass()->getUsings();
+		
 
 		foreach($refUsings as $shortName => $fullName)
 			if($shortName === $valueHolder->getFullName() || $shortName === $valueHolder->getShortName())
-				if(ReflectionUtil::classOrInterfaceExists($fullName) && $this->checkAttributeDecendence($fullName))
+				if(Type::IsTypeExisting($fullName) && $this->checkAttributeDecendence($fullName))
 					return $fullName;
 
 
@@ -191,8 +210,7 @@ class AttributeBuilder
 
 	private function checkAttributeDecendence($classname)
 	{
-		$ref = ReflectionUtil::getReflectionClass($classname);
-		return $ref->isSubclassOf(Attribute::$classname);
+		return TypeManager::GetTypeInstance($classname)->IsSubClass(Attribute::$classname);
 	}
 
 }

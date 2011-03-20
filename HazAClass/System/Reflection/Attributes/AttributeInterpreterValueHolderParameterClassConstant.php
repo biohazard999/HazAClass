@@ -16,7 +16,7 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeInterpre#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System\Attributes;
+namespace HazAClass\System\Reflection\Attributes;
 
 class AttributeInterpreterValueHolderParameterClassConstant extends AbstractAttributeInterpreterValueHolderParameterComplex
 {

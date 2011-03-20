@@ -16,10 +16,9 @@
  * $HeadURL:: http://x2.delegate.at/svn/HazAClass_Sandbox/trunk/HazAClass/core/attributes/AttributeExceptio#$
  ***********************************************************************************************************/
 
-namespace HazAClass\core\attributes;
-use HazAClass\core\exceptions\AbstractHazAClassException;
+namespace HazAClass\System\Reflection\Attributes;
 
-class AttributeException extends AbstractHazAClassException
+class AttributeException extends \RuntimeException
 {
 	public static $classname = __CLASS__;
 

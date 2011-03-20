@@ -47,9 +47,12 @@ abstract class Object implements IObject
 		}
 	}
 
+	/**
+	 * @return Type
+	 */
 	final public function GetType()
 	{
-		return TypeManager::Instance()->getType($this->GetClassName());
+		return TypeManager::Instance()->GetType($this->GetClassName());
 	}
 
 	final public function GetClassName()
@@ -66,6 +69,7 @@ abstract class Object implements IObject
 	{
 		return $this === $obj;
 	}
+
 }
 
 ?>
