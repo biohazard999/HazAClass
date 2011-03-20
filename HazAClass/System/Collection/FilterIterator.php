@@ -16,84 +16,29 @@
  * $HeadURL:: http://jackonrock.dyndns.org:81/svn/HazAClassLite/branches/HazAClass53/framework/controls/doc#$
  * ********************************************************************************************************* */
 
-namespace HazAClass\System;
+namespace HazAClass\System\Collection;
 
-use HazAClass\System\Serializer\Serializer;
-
-include_once 'IObject.php';
-
-abstract class Object implements IObject, \Serializable
+class FilterIterator extends \FilterIterator
 {
 
 	public static $classname = __CLASS__;
-
-	public function GetHash()
-	{
-		return spl_object_hash($this);
-	}
-
-	public function ToString()
-	{
-		return $this->GetClassName().' ('.$this->GetHash().')';
-	}
-
-	final public function __toString()
-	{
-		try
-		{
-			return $this->ToString();
-		}
-		catch(\Exception $e)
-		{
-			return $e->getMessage();
-		}
-	}
-
 	/**
-	 * @return Type
+	 * @var IFilter
 	 */
-	final public function GetType()
+	private $filter;
+
+	public function __construct(\Iterator $iterator, IFilter $filter = null)
 	{
-		return TypeManager::Instance()->GetType($this->GetClassName());
+		parent::__construct($iterator);
+		if($filter === null)
+			$filter = new TypeFilter(typeof(Object::$classname));
+		$this->filter = $filter;
 	}
 
-	final public function GetClassName()
+	public function accept()
 	{
-		return get_class($this);
-	}
-
-	final public static function ReferenceEqualsStatic(IObject $objectA, IObject $objectB)
-	{
-		return $objectA === $objectB;
-	}
-
-	public function ReferenceEquals(IObject $obj)
-	{
-		return $this === $obj;
-	}
-
-	public function serialize()
-	{
-		$ref = $this->GetType()->GetReflectionClass();
-		if($ref->HasAttribute(SerializedAttribute::$classname))
-		{
-			$attr = $ref->GetAttribute(SerializedAttribute::$classname); /* @var $attr SerializedAttribute */
-			$sType = $attr->GetSerializerType(); /* @var $sType Type */
-			return $sType->NewInstance()->Serialize($this);
-		}
-		return serialize($this);
-	}
-
-	public function unserialize($serialized)
-	{
-		$ref = $this->GetType()->GetReflectionClass();
-		if($ref->HasAttribute(SerializedAttribute::$classname))
-		{
-			$attr = $ref->GetAttribute(SerializedAttribute::$classname); /* @var $attr SerializedAttribute */
-			$sType = $attr->GetSerializerType(); /* @var $sType Type */
-			return $sType->NewInstance()->DeSerialize(new String($serialized));
-		}
-		return unserialize($serialized);
+		$obj = $this->getInnerIterator()->current();
+		return $this->filter->Accept($obj);
 	}
 
 }

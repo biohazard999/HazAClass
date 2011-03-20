@@ -18,83 +18,9 @@
 
 namespace HazAClass\System;
 
-use HazAClass\System\Serializer\Serializer;
-
-include_once 'IObject.php';
-
-abstract class Object implements IObject, \Serializable
+class DateTime extends \DateTime
 {
-
 	public static $classname = __CLASS__;
-
-	public function GetHash()
-	{
-		return spl_object_hash($this);
-	}
-
-	public function ToString()
-	{
-		return $this->GetClassName().' ('.$this->GetHash().')';
-	}
-
-	final public function __toString()
-	{
-		try
-		{
-			return $this->ToString();
-		}
-		catch(\Exception $e)
-		{
-			return $e->getMessage();
-		}
-	}
-
-	/**
-	 * @return Type
-	 */
-	final public function GetType()
-	{
-		return TypeManager::Instance()->GetType($this->GetClassName());
-	}
-
-	final public function GetClassName()
-	{
-		return get_class($this);
-	}
-
-	final public static function ReferenceEqualsStatic(IObject $objectA, IObject $objectB)
-	{
-		return $objectA === $objectB;
-	}
-
-	public function ReferenceEquals(IObject $obj)
-	{
-		return $this === $obj;
-	}
-
-	public function serialize()
-	{
-		$ref = $this->GetType()->GetReflectionClass();
-		if($ref->HasAttribute(SerializedAttribute::$classname))
-		{
-			$attr = $ref->GetAttribute(SerializedAttribute::$classname); /* @var $attr SerializedAttribute */
-			$sType = $attr->GetSerializerType(); /* @var $sType Type */
-			return $sType->NewInstance()->Serialize($this);
-		}
-		return serialize($this);
-	}
-
-	public function unserialize($serialized)
-	{
-		$ref = $this->GetType()->GetReflectionClass();
-		if($ref->HasAttribute(SerializedAttribute::$classname))
-		{
-			$attr = $ref->GetAttribute(SerializedAttribute::$classname); /* @var $attr SerializedAttribute */
-			$sType = $attr->GetSerializerType(); /* @var $sType Type */
-			return $sType->NewInstance()->DeSerialize(new String($serialized));
-		}
-		return unserialize($serialized);
-	}
 
 }
 

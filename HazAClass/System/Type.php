@@ -199,6 +199,11 @@ final class Type extends Object
 		return $this->GetFullName();
 	}
 
+	public function NewInstance(array $args = array())
+	{
+		return $this->GetReflectionClass()->newInstanceArgs($args);
+	}
+
 }
 
 ?>

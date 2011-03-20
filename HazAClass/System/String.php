@@ -24,6 +24,7 @@ class String extends Object implements \Countable
 	public static $classname = __CLASS__;
 
 	const EMPTY_STRING = '';
+	const SPACE_STRING = ' ';
 
 	private $string;
 

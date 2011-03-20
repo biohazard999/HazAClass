@@ -113,7 +113,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	public function testGetMethods()
 	{
 		$methods = $this->object->GetType()->GetReflectionClass()->getMethods();
-		$this->assertEquals(9, $methods->count());
+		$this->assertEquals(11, $methods->count());
 		$this->assertInstanceOf(IList::IList, $methods);
 	}
 
@@ -135,7 +135,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 	{
 		$interfaces = $this->object->GetType()->GetReflectionClass()->getInterfaces();
 		$this->assertInstanceOf(IList::IList, $interfaces);
-		$this->assertEquals(2, $interfaces->count());
+		$this->assertEquals(3, $interfaces->count());
 	}
 
 	public function testGetParentClass()

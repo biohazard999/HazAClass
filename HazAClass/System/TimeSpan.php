@@ -18,83 +18,18 @@
 
 namespace HazAClass\System;
 
-use HazAClass\System\Serializer\Serializer;
-
-include_once 'IObject.php';
-
-abstract class Object implements IObject, \Serializable
+class TimeSpan extends Object
 {
-
 	public static $classname = __CLASS__;
-
-	public function GetHash()
-	{
-		return spl_object_hash($this);
-	}
-
-	public function ToString()
-	{
-		return $this->GetClassName().' ('.$this->GetHash().')';
-	}
-
-	final public function __toString()
-	{
-		try
-		{
-			return $this->ToString();
-		}
-		catch(\Exception $e)
-		{
-			return $e->getMessage();
-		}
-	}
-
-	/**
-	 * @return Type
-	 */
-	final public function GetType()
-	{
-		return TypeManager::Instance()->GetType($this->GetClassName());
-	}
-
-	final public function GetClassName()
-	{
-		return get_class($this);
-	}
-
-	final public static function ReferenceEqualsStatic(IObject $objectA, IObject $objectB)
-	{
-		return $objectA === $objectB;
-	}
-
-	public function ReferenceEquals(IObject $obj)
-	{
-		return $this === $obj;
-	}
-
-	public function serialize()
-	{
-		$ref = $this->GetType()->GetReflectionClass();
-		if($ref->HasAttribute(SerializedAttribute::$classname))
-		{
-			$attr = $ref->GetAttribute(SerializedAttribute::$classname); /* @var $attr SerializedAttribute */
-			$sType = $attr->GetSerializerType(); /* @var $sType Type */
-			return $sType->NewInstance()->Serialize($this);
-		}
-		return serialize($this);
-	}
-
-	public function unserialize($serialized)
-	{
-		$ref = $this->GetType()->GetReflectionClass();
-		if($ref->HasAttribute(SerializedAttribute::$classname))
-		{
-			$attr = $ref->GetAttribute(SerializedAttribute::$classname); /* @var $attr SerializedAttribute */
-			$sType = $attr->GetSerializerType(); /* @var $sType Type */
-			return $sType->NewInstance()->DeSerialize(new String($serialized));
-		}
-		return unserialize($serialized);
-	}
+	
+	const SECOND = 1;
+	const MINUTE = 60;
+	const HOUR = 3600;
+	const DAY = 86400;
+	const WEEK = 604800;
+	const MONTH = 2592000;
+	const YEAR = 31104000;
+	const NEVER = -1;
 
 }
 
