@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="HazAClass" default="build" basedir=".">
     <property name="source" value="src"/>
+    <property name="bld" value="../build" />
 
     <target name="clean"
          description="Clean up and create artifact directories">
-        <delete dir="${basedir}/build/api"/>
-        <delete dir="${basedir}/build/code-browser"/>
-        <delete dir="${basedir}/build/coverage"/>
-        <delete dir="${basedir}/build/logs"/>
-        <delete dir="${basedir}/build/pdepend"/>
+        <delete dir="${bld}/api"/>
+        <delete dir="${bld}/code-browser"/>
+        <delete dir="${bld}/coverage"/>
+        <delete dir="${bld}/logs"/>
+        <delete dir="${bld}/pdepend"/>
 
-        <mkdir dir="${basedir}/build/api"/>
-        <mkdir dir="${basedir}/build/code-browser"/>
-        <mkdir dir="${basedir}/build/coverage"/>
-        <mkdir dir="${basedir}/build/logs"/>
-        <mkdir dir="${basedir}/build/pdepend"/>
+        <mkdir dir="${bld}/api"/>
+        <mkdir dir="${bld}/code-browser"/>
+        <mkdir dir="${bld}/coverage"/>
+        <mkdir dir="${bld}/logs"/>
+        <mkdir dir="${bld}/pdepend"/>
     </target>
 
     <target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
@@ -36,51 +37,51 @@
 
     <target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
         <exec executable="pdepend">
-            <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml
-              --jdepend-chart=${basedir}/build/pdepend/dependencies.svg
-              --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg
+            <arg line="--jdepend-xml=${bld}/logs/jdepend.xml
+              --jdepend-chart=${bld}/pdepend/dependencies.svg
+              --overview-pyramid=${bld}/pdepend/overview-pyramid.svg
               ${source}" />
         </exec>
     </target>
 
     <target name="phpmd" description="Generate pmd.xml using PHPMD">
         <exec executable="phpmd">
-            <arg line=". xml codesize --reportfile ${basedir}/build/logs/pmd.xml" />
+            <arg line=". xml codesize --reportfile ${bld}/logs/pmd.xml" />
         </exec>
     </target>
 
     <target name="phpcpd" description="Generate pmd-cpd.xml using PHPCPD">
         <exec executable="phpcpd">
-            <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml ." />
+            <arg line="--log-pmd ${bld}/logs/pmd-cpd.xml ." />
         </exec>
     </target>
 
     <target name="phploc" description="Generate phploc.csv">
         <exec executable="phploc">
-            <arg line="--log-csv ${basedir}/build/logs/phploc.csv ." />
+            <arg line="--log-csv ${bld}/logs/phploc.csv ." />
         </exec>
     </target>
 
     <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
         <exec executable="phpcs" output="/dev/null">
             <arg line="--report=checkstyle
-              --report-file=${basedir}/build/logs/checkstyle.xml
-              --standard=build/phpcs.xml
+              --report-file=${bld}/logs/checkstyle.xml
+              --standard=phpcs.xml
               ." />
         </exec>
     </target>
 
     <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
         <exec executable="phpdoc">
-            <arg line="-d . -t ${basedir}/build/api" />
+            <arg line="-d . -t ${bld}/api" />
         </exec>
     </target>
 
     <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
         <exec executable="phpcb">
-            <arg line="--log    ${basedir}/build/logs
+            <arg line="--log ${bld}/logs
               --source .
-              --output ${basedir}/build/code-browser" />
+              --output ${bld}/code-browser" />
         </exec>
     </target>
 
