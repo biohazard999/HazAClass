@@ -7,7 +7,7 @@
 
     1.2 Installing
         1.2.1 Via Pear
-            HazAClass is hosted on PearHub.org
+            HazAClass is hosted on PearHub.org (http://www.pearhub.org/projects/HazAClass/)
             To install:
                 pear channel-discover pearhub.org
                 pear install pearhub/HazAClass
