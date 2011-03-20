@@ -165,7 +165,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->object->Concat('a');
 
-		$this->assertEquals('aaaaa', $this->object->Repeat(5));
+		$this->assertEquals('aaaaa', $this->object->Repeat(5)->ToString());
 	}
 
 	public function testUUID()
