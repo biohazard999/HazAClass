@@ -120,7 +120,7 @@ class AttributeBuilder
 
 	private function Invoke($classname, array $params)
 	{
-		$refClass = TypeManager::GetTypeInstance($classname)->GetReflectionClass();
+		$refClass = typeof($classname)->GetReflectionClass();
 		try
 		{
 			if($refClass->getConstructor() !== null && count($refClass->getConstructor()->getParameters()) > 0)
@@ -210,7 +210,7 @@ class AttributeBuilder
 
 	private function checkAttributeDecendence($classname)
 	{
-		return TypeManager::GetTypeInstance($classname)->IsSubClass(Attribute::$classname);
+		return typeof($classname)->IsSubClass(Attribute::$classname);
 	}
 
 }

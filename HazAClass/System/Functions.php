@@ -23,7 +23,7 @@ use HazAClass\System\TypeManager;
  */
 function typeof($classname)
 {
-	return  TypeManager::Instance()->getType($classname);
+	return  TypeManager::GetTypeInstance($classname);
 }
 
 ?>

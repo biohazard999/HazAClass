@@ -12,6 +12,8 @@ abstract class ObserableObject extends Object
 	{
 		if($this->eventList === null)
 			$this->eventList = new GenericList(Event::$classname);
+		if($this->eventList->IndexExists($event->GetName()))
+			throw new \InvalidArgumentException('The event with name '.$event->GetName().' is already registered');
 		$this->eventList[$event->GetName()] = $event;
 	}
 
