@@ -21,6 +21,7 @@ namespace HazAClass\System\Xml;
 use HazAClass\System\IRenderble;
 use HazAClass\System\Collection\FilterIterator;
 use HazAClass\System\Object;
+use HazAClass\System\Collection\Generic\GenericList;
 
 abstract class XmlNode extends Object implements IRenderble
 {

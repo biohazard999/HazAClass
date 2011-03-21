@@ -35,33 +35,11 @@ class XmlAttributeTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @todo Implement testAddNode().
-	 */
-	public function testAddNode()
-	{
-	
-	}
-
-	/**
-	 * @todo Implement testRemoveNode().
-	 */
-	public function testRemoveNode()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * @todo Implement testHasChildNodes().
 	 */
 	public function testHasChildNodes()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertFalse($this->xmlAttr->HasChildNodes());
 	}
 
 	/**
@@ -69,10 +47,10 @@ class XmlAttributeTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetParentNode()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertNull($this->xmlAttr->GetParentNode());
+		$element = new XmlElement('html');
+		$this->xmlAttr->SetParentNode($element);
+		$this->assertSame($element, $this->xmlAttr->GetParentNode());
 	}
 
 	/**
@@ -80,10 +58,7 @@ class XmlAttributeTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRender()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertEquals('TestName="TestValue"', $this->xmlAttr->Render());
 	}
 
 }

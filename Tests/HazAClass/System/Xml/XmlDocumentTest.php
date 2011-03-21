@@ -22,7 +22,7 @@ class XmlDocumentTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->object = new XmlDocument;
+		$this->object = new XmlDocument();
 	}
 
 	/**
@@ -31,29 +31,15 @@ class XmlDocumentTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
-		
+		$this->object = null;
 	}
-
-	/**
-	 * @todo Implement testGetRootNode().
-	 */
+	
 	public function testGetRootNode()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
-	 * @todo Implement testSetRootNode().
-	 */
-	public function testSetRootNode()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$xml = new XmlElement('html');
+		
+		$this->object->SetRootNode($xml);
+		$this->assertSame($xml, $this->object->GetRootNode());
 	}
 
 	/**
@@ -61,10 +47,10 @@ class XmlDocumentTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testRender()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$xml = new XmlElement('html');
+		
+		$this->object->SetRootNode($xml);
+		
 	}
 
 	/**

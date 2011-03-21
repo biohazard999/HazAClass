@@ -55,12 +55,6 @@ class XmlDocument extends Object implements IRenderble
 			$string->Concat($this->rootElement->Render());
 		return $string->ToString();
 	}
-
-	public function ToString()
-	{
-		return $this->Render();
-	}
-
 }
 
 ?>

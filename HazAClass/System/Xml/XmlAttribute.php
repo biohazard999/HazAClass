@@ -63,6 +63,16 @@ class XmlAttribute extends XmlNode
 		$this->parentNode->AddNode($this);
 	}
 
+	public function GetValue()
+	{
+		return $this->value;
+	}
+
+	public function SetValue($value)
+	{
+		$this->value = $value;
+	}
+
 	public function Render()
 	{
 		$string = new String();
