@@ -22,6 +22,11 @@ class XmlElement extends XmlNode
 {
 	public static $classname = __CLASS__;	
 	
+	/**
+	 *
+	 * @param string $name
+	 * @param XmlNode $parentNode 
+	 */
 		public function __construct($name, XmlNode $parentNode = null)
 	{
 		$this->name = $name;

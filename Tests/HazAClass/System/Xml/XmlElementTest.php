@@ -22,7 +22,7 @@ class XmlElementTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->object = new XmlElement;
+		$this->object = new XmlElement('html');
 	}
 
 	/**
