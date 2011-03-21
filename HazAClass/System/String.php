@@ -25,6 +25,7 @@ class String extends Object implements \Countable
 
 	const EMPTY_STRING = '';
 	const SPACE_STRING = ' ';
+	const NEW_LINE = "\n";
 
 	private $string;
 

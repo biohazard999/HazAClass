@@ -18,13 +18,21 @@
 
 namespace HazAClass\System\Xml;
 
+use HazAClass\System\String;
+
 class XmlAttribute extends XmlNode
 {
 
 	public static $classname = __CLASS__;
 	protected $value;
 
-	public function __construct($name, $value, XmlNode $parentNode)
+	/**
+	 *
+	 * @param string $name
+	 * @param string $value
+	 * @param XmlNode $parentNode
+	 */
+	public function __construct($name, $value, XmlNode $parentNode = null)
 	{
 		$this->name = $name;
 		$this->value = $value;
@@ -41,10 +49,24 @@ class XmlAttribute extends XmlNode
 		
 	}
 
+	public function HasChildNodes()
+	{
+		return false;
+	}
+
+	public function SetParentNode(XmlNode $parentNode)
+	{
+		if($this->HasParentNode())
+			$this->GetParentNode()->RemoveNode($this);
+
+		$this->parentNode = $parentNode;
+		$this->parentNode->AddNode($this);
+	}
+
 	public function Render()
 	{
 		$string = new String();
-		$string->Concat($this->GetName(),'=', '"', $this->GetValue(),'"');
+		$string->Concat($this->GetName(), '=', '"', $this->GetValue(), '"');
 		return $string->ToString();
 	}
 

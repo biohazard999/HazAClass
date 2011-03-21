@@ -67,6 +67,9 @@ abstract class XmlNode extends Object implements IRenderble
 		}
 	}
 
+	/**
+	 * @return XmlNode
+	 */
 	public function GetParentNode()
 	{
 		return $this->parentNode;
