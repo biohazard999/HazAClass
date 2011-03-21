@@ -21,6 +21,12 @@ namespace HazAClass\System\Xml;
 class XmlElement extends XmlNode
 {
 	public static $classname = __CLASS__;	
+	
+		public function __construct($name, XmlNode $parentNode = null)
+	{
+		$this->name = $name;
+		$this->parentNode = $parentNode;
+	}
 }
 
 ?>

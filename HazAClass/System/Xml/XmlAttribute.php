@@ -22,6 +22,14 @@ class XmlAttribute extends XmlNode
 {
 
 	public static $classname = __CLASS__;
+	protected $value;
+
+	public function __construct($name, $value, XmlNode $parentNode)
+	{
+		$this->name = $name;
+		$this->value = $value;
+		$this->parentNode = $parentNode;
+	}
 
 	public function AddNode(XmlNode $node)
 	{
@@ -31,6 +39,13 @@ class XmlAttribute extends XmlNode
 	public function RemoveNode(XmlNode $node)
 	{
 		
+	}
+
+	public function Render()
+	{
+		$string = new String();
+		$string->Concat($this->GetName(),'=', '"', $this->GetValue(),'"');
+		return $string->ToString();
 	}
 
 }
