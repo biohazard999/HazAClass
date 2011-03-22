@@ -22,7 +22,7 @@ abstract class XmlNodeTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$this->object = new XmlNode;
+	
 	}
 
 	/**
@@ -39,10 +39,9 @@ abstract class XmlNodeTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testAddNode()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->object->AddNode(new XmlAttribute('test', 'testvalue'));
+		$this->object->AddNode(new XmlElement('body'));
+		$this->assertEquals(2, $this->object->count());
 	}
 
 	/**

@@ -23,7 +23,7 @@ use HazAClass\System\Collection\FilterIterator;
 use HazAClass\System\Object;
 use HazAClass\System\Collection\Generic\GenericList;
 
-abstract class XmlNode extends Object implements IRenderble
+abstract class XmlNode extends Object implements IRenderble, \Countable
 {
 
 	public static $classname = __CLASS__;
@@ -119,6 +119,11 @@ abstract class XmlNode extends Object implements IRenderble
 			$string->Concat(String::SPACE_STRING, '/>');
 
 		return $string->ToString();
+	}
+
+	public function count()
+	{
+		return $this->nodes->count();
 	}
 
 }
