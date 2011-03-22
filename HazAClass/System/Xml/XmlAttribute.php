@@ -48,12 +48,7 @@ class XmlAttribute extends XmlNode
 	{
 		
 	}
-
-	public function HasChildNodes()
-	{
-		return false;
-	}
-
+	
 	public function SetParentNode(XmlNode $parentNode)
 	{
 		if($this->HasParentNode())
@@ -78,6 +73,11 @@ class XmlAttribute extends XmlNode
 		$string = new String();
 		$string->Concat($this->GetName(), '=', '"', $this->GetValue(), '"');
 		return $string->ToString();
+	}
+	
+	public function count()
+	{
+		return 0;
 	}
 
 }

@@ -34,9 +34,6 @@ abstract class XmlNodeTest extends \PHPUnit_Framework_TestCase
 
 	}
 
-	/**
-	 * @todo Implement testAddNode().
-	 */
 	public function testAddNode()
 	{
 		$this->object->AddNode(new XmlAttribute('test', 'testvalue'));
@@ -44,15 +41,16 @@ abstract class XmlNodeTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(2, $this->object->count());
 	}
 
-	/**
-	 * @todo Implement testRemoveNode().
-	 */
 	public function testRemoveNode()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$attr = new XmlAttribute('test', 'testvalue');
+		$node = new XmlElement('body');
+		$this->object->AddNode($attr);
+		$this->object->AddNode($node);
+		$this->assertEquals(2, $this->object->count());
+		$this->object->RemoveNode($node);
+		$this->object->RemoveNode($attr);
+		$this->assertEquals(0, $this->object->count());
 	}
 
 	/**

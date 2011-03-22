@@ -18,20 +18,25 @@
 
 namespace HazAClass\System\Xml;
 
+use HazAClass\System\Collection\Generic\GenericList;
+
 class XmlElement extends XmlNode
 {
-	public static $classname = __CLASS__;	
-	
+
+	public static $classname = __CLASS__;
+
 	/**
 	 *
 	 * @param string $name
 	 * @param XmlNode $parentNode 
 	 */
-		public function __construct($name, XmlNode $parentNode = null)
+	public function __construct($name, XmlNode $parentNode = null)
 	{
+		$this->nodes = new GenericList(XmlNode::$classname);
 		$this->name = $name;
 		$this->parentNode = $parentNode;
 	}
+
 }
 
 ?>

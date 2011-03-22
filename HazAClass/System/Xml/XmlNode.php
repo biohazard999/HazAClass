@@ -37,13 +37,8 @@ abstract class XmlNode extends Object implements IRenderble, \Countable
 	 */
 	protected $parentNode;
 
-
-
 	public function AddNode(XmlNode $node)
 	{
-		if($this->nodes === null)
-			$this->nodes = new GenericList(XmlNode::$classname);
-
 		if($node->HasParentNode() && !$node->GetParentNode()->ReferenceEquals($this) || !$node->HasParentNode())
 		{
 			$node->SetParentNode($this);
@@ -54,8 +49,6 @@ abstract class XmlNode extends Object implements IRenderble, \Countable
 
 	public function RemoveNode(XmlNode $node)
 	{
-		if($this->nodes === null)
-			$this->nodes = new GenericList(XmlNode::$classname);
 		$this->nodes->Remove($node);
 	}
 
@@ -83,7 +76,7 @@ abstract class XmlNode extends Object implements IRenderble, \Countable
 
 	public function HasChildNodes()
 	{
-		return $this->nodes->count() > 0;
+		return $this->count() > 0;
 	}
 
 	public function GetName()
